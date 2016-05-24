@@ -83,13 +83,18 @@ function generirajPodatke(stPacienta) {
 	    } else if (stPacienta == 3) {
 	        pacientiTab[3].ehrId = ehrIdcall;
 	    }
+	    
+	    if(pacientiTab[1].ehrId != null && pacientiTab[2].ehrId != null && pacientiTab[3].ehrId != null){
+    	    for(var i = 1; i <= 3; i++){
+                console.log("pacient: " + i + " : " + pacientiTab[i].ehrId);
+                dodajMeritveVitalnihZnakovAuto(i);
+            }
+	    }
     });
   
   console.log("Generiraj podatke: " + stPacienta + " success");
   
-  for(var i = 1; i <= 3; i++){
-      dodajMeritveVitalnihZnakovAuto(i);
-  }
+  
 }
 
 
@@ -130,14 +135,13 @@ function kreirajEHRauto(pacient, stPacienta, callback){
 		                    
 		                    switch(stPacienta){
 		                        case 1: 
-		                            $("#kreirajSporocilo1").html("<span class='obvestilo " + "label label-success fade-in'>Uspešno kreiran EHR '" + ehrId + "'.</span><br>");
+		                            $("#kreirajSporocilo1").html("<span class='obvestilo " + "label label-success fade-in'>Uspešno kreiran EHR za '" + pacient.firstName + " " + pacient.lastName + "' - " + ehrId + "</span><br>");
 		                            break;
 		                        case 2:
-		                            $("#kreirajSporocilo2").html("<span class='obvestilo " + "label label-success fade-in'>Uspešno kreiran EHR '" + ehrId + "'.</span><br>");
+		                            $("#kreirajSporocilo2").html("<span class='obvestilo " + "label label-success fade-in'>Uspešno kreiran EHR za '" + pacient.firstName + " " + pacient.lastName + "' - " + ehrId + "</span><br>");
 		                            break;
 		                        case 3:
-		                            $("#kreirajSporocilo3").html("<span class='obvestilo " + "label label-success fade-in'>Uspešno kreiran EHR '" + ehrId + "'.</span><br>");
-		                            break;
+		                            $("#kreirajSporocilo3").html("<span class='obvestilo " + "label label-success fade-in'>Uspešno kreiran EHR za '" + pacient.firstName + " " + pacient.lastName + "' - " + ehrId + "</span><br>");
 		                    }
 		                    
 		                    $("#preberiEHRid").val(ehrId);
@@ -158,19 +162,136 @@ function kreirajEHRauto(pacient, stPacienta, callback){
 }
 
 function dodajMeritveVitalnihZnakovAuto(stPacienta){
+    
+    var meritve = {
+        ehrId: null,
+	    datumInUra: null,
+	    telesnaVisina: null,
+    	telesnaTeza: null,
+    	telesnaTemperatura: null,
+    	sistolicniKrvniTlak: null,
+    	diastolicniKrvniTlak: null,
+    	nasicenostKrviSKisikom: null
+    };
+    
+    switch(stPacienta){
+        case 1:
+            console.log("Pride sem?");
+            var meritve1_1 = meritve;
+            meritve1_1.ehrId = pacientiTab[stPacienta].ehrId;
+	        meritve1_1.datumInUra= "2010-03-12T12:55";
+	        meritve1_1.telesnaVisina= "180";
+    	    meritve1_1.telesnaTeza= "55";
+    	    meritve1_1.telesnaTemperatura= "36";
+    	    meritve1_1.sistolicniKrvniTlak= "145";
+    	    meritve1_1.diastolicniKrvniTlak= "110";
+    	    meritve1_1.nasicenostKrviSKisikom= "98";
+    	    vpisiMeritve(stPacienta, meritve1_1);
+    	    
+            
+            var meritve1_2 = meritve;
+            meritve1_2.ehrId = pacientiTab[stPacienta].ehrId;
+	        meritve1_2.datumInUra= "2012-03-12T12:55";
+	        meritve1_2.telesnaVisina= "180";
+    	    meritve1_2.telesnaTeza= "65";
+    	    meritve1_2.telesnaTemperatura= "37";
+    	    meritve1_2.sistolicniKrvniTlak= "125";
+    	    meritve1_2.diastolicniKrvniTlak= "110";
+    	    meritve1_2.nasicenostKrviSKisikom= "98";
+    	    vpisiMeritve(stPacienta, meritve1_2);
+    	    
+            var meritve1_3 = meritve;
+            meritve1_3.ehrId = pacientiTab[stPacienta].ehrId;
+	        meritve1_3.datumInUra= "2016-03-12T12:55";
+	        meritve1_3.telesnaVisina= "180";
+    	    meritve1_3.telesnaTeza= "105";
+    	    meritve1_3.telesnaTemperatura= "35";
+    	    meritve1_3.sistolicniKrvniTlak= "160";
+    	    meritve1_3.diastolicniKrvniTlak= "130";
+    	    meritve1_3.nasicenostKrviSKisikom= "98";
+    	    vpisiMeritve(stPacienta, meritve1_3);
+            
+            break;
+            
+        case 2:
+            var meritve2_1 = meritve;
+            console.log("Pride sem - switch");
+            meritve2_1.ehrId = pacientiTab[stPacienta].ehrId;
+	        meritve2_1.datumInUra= "2011-04-22T12:55";
+	        meritve2_1.telesnaVisina= "155";
+    	    meritve2_1.telesnaTeza= "82";
+    	    meritve2_1.telesnaTemperatura= "34";
+    	    meritve2_1.sistolicniKrvniTlak= "150";
+    	    meritve2_1.diastolicniKrvniTlak= "90";
+    	    meritve2_1.nasicenostKrviSKisikom= "97";
+    	    vpisiMeritve(stPacienta, meritve2_1);
+    	    
+            var meritve2_2 = meritve;
+            meritve2_2.ehrId = pacientiTab[stPacienta].ehrId;
+	        meritve2_2.datumInUra= "2013-05-23T12:44";
+	        meritve2_2.telesnaVisina= "154";
+    	    meritve2_2.telesnaTeza= "75";
+    	    meritve2_2.telesnaTemperatura= "36";
+    	    meritve2_2.sistolicniKrvniTlak= "130";
+    	    meritve2_2.diastolicniKrvniTlak= "90";
+    	    meritve2_2.nasicenostKrviSKisikom= "97";
+    	    vpisiMeritve(stPacienta, meritve2_2);
+    	    
+            var meritve2_3 = meritve;
+            meritve2_3.ehrId = pacientiTab[stPacienta].ehrId;
+	        meritve2_3.datumInUra= "2016-05-23T12:44";
+	        meritve2_3.telesnaVisina= "152";
+    	    meritve2_3.telesnaTeza= "56";
+    	    meritve2_3.telesnaTemperatura= "35.5";
+    	    meritve2_3.sistolicniKrvniTlak= "120";
+    	    meritve2_3.diastolicniKrvniTlak= "90";
+    	    meritve2_3.nasicenostKrviSKisikom= "97";
+    	    vpisiMeritve(stPacienta, meritve2_3);
+            
+            break;
+        
+        case 3:
+            var meritve3_1 = meritve;
+            meritve3_1.ehrId = pacientiTab[stPacienta].ehrId;
+	        meritve3_1.datumInUra= "2011-05-23T12:44";
+	        meritve3_1.telesnaVisina= "160";
+    	    meritve3_1.telesnaTeza= "50";
+    	    meritve3_1.telesnaTemperatura= "37.8";
+    	    meritve3_1.sistolicniKrvniTlak= "130";
+    	    meritve3_1.diastolicniKrvniTlak= "90";
+    	    meritve3_1.nasicenostKrviSKisikom= "100";
+    	    vpisiMeritve(stPacienta, meritve3_1);
+            
+            var meritve3_2 = meritve;
+            meritve3_2.ehrId = pacientiTab[stPacienta].ehrId;
+	        meritve3_2.datumInUra= "2014-09-28T12:44";
+	        meritve3_2.telesnaVisina= "175";
+    	    meritve3_2.telesnaTeza= "59";
+    	    meritve3_2.telesnaTemperatura= "36.4";
+    	    meritve3_2.sistolicniKrvniTlak= "131";
+    	    meritve3_2.diastolicniKrvniTlak= "90";
+    	    meritve3_2.nasicenostKrviSKisikom= "100";
+    	    vpisiMeritve(stPacienta, meritve3_2);
+    	    
+            var meritve3_3 = meritve;
+            meritve3_3.ehrId = pacientiTab[stPacienta].ehrId;
+	        meritve3_3.datumInUra= "2016-09-28T12:44";
+	        meritve3_3.telesnaVisina= "180";
+    	    meritve3_3.telesnaTeza= "65";
+    	    meritve3_3.telesnaTemperatura= "36.3";
+    	    meritve3_3.sistolicniKrvniTlak= "135";
+    	    meritve3_3.diastolicniKrvniTlak= "90";
+    	    meritve3_3.nasicenostKrviSKisikom= "100";
+    	    vpisiMeritve(stPacienta, meritve3_3);
+            
+            break;
+    }
+    
+}
+
+function vpisiMeritve(stPacienta, meritve){
     sessionId = getSessionId();
-
-	var ehrId = $("#dodajVitalnoEHR").val();
-	var datumInUra = $("#dodajVitalnoDatumInUra").val();
-	var telesnaVisina = $("#dodajVitalnoTelesnaVisina").val();
-	var telesnaTeza = $("#dodajVitalnoTelesnaTeza").val();
-	var telesnaTemperatura = $("#dodajVitalnoTelesnaTemperatura").val();
-	var sistolicniKrvniTlak = $("#dodajVitalnoKrvniTlakSistolicni").val();
-	var diastolicniKrvniTlak = $("#dodajVitalnoKrvniTlakDiastolicni").val();
-	var nasicenostKrviSKisikom = $("#dodajVitalnoNasicenostKrviSKisikom").val();
-	//var merilec = $("#dodajVitalnoMerilec").val();
-
-	if (!ehrId || ehrId.trim().length == 0) {
+    if (!meritve.ehrId || meritve.ehrId.trim().length == 0) {
 		$("#dodajMeritveVitalnihZnakovSporocilo").html("<span class='obvestilo " +
       "label label-warning fade-in'>Prosim vnesite zahtevane podatke!</span>");
 	} else {
@@ -182,17 +303,17 @@ function dodajMeritveVitalnihZnakovAuto(stPacienta){
       // https://rest.ehrscape.com/rest/v1/template/Vital%20Signs/example
 		    "ctx/language": "en",
 		    "ctx/territory": "SI",
-		    "ctx/time": datumInUra,
-		    "vital_signs/height_length/any_event/body_height_length": telesnaVisina,
-		    "vital_signs/body_weight/any_event/body_weight": telesnaTeza,
-		   	"vital_signs/body_temperature/any_event/temperature|magnitude": telesnaTemperatura,
+		    "ctx/time": meritve.datumInUra,
+		    "vital_signs/height_length/any_event/body_height_length": meritve.telesnaVisina,
+		    "vital_signs/body_weight/any_event/body_weight": meritve.telesnaTeza,
+		   	"vital_signs/body_temperature/any_event/temperature|magnitude": meritve.telesnaTemperatura,
 		    "vital_signs/body_temperature/any_event/temperature|unit": "°C",
-		    "vital_signs/blood_pressure/any_event/systolic": sistolicniKrvniTlak,
-		    "vital_signs/blood_pressure/any_event/diastolic": diastolicniKrvniTlak,
-		    "vital_signs/indirect_oximetry:0/spo2|numerator": nasicenostKrviSKisikom
+		    "vital_signs/blood_pressure/any_event/systolic": meritve.sistolicniKrvniTlak,
+		    "vital_signs/blood_pressure/any_event/diastolic": meritve.diastolicniKrvniTlak,
+		    "vital_signs/indirect_oximetry:0/spo2|numerator": meritve.nasicenostKrviSKisikom
 		};
 		var parametriZahteve = {
-		    ehrId: ehrId,
+		    ehrId: meritve.ehrId,
 		    templateId: 'Vital Signs',
 		    format: 'FLAT'
 		};
@@ -205,6 +326,7 @@ function dodajMeritveVitalnihZnakovAuto(stPacienta){
 		        $("#dodajMeritveVitalnihZnakovSporocilo").html(
               "<span class='obvestilo label label-success fade-in'>" +
               res.meta.href + ".</span>");
+              console.log("success?");
 		    },
 		    error: function(err) {
 		    	$("#dodajMeritveVitalnihZnakovSporocilo").html(
@@ -214,7 +336,6 @@ function dodajMeritveVitalnihZnakovAuto(stPacienta){
 		});
 	}
 }
-
 
 
 
