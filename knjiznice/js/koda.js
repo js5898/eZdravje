@@ -30,33 +30,124 @@ function getSessionId() {
  * @param stPacienta zaporedna številka pacienta (1, 2 ali 3)
  * @return ehrId generiranega pacienta
  */
- 
-/*
-function generirajPodatke(stPacienta) {
-  //ehrId = "";
 
-  // TODO: Potrebno implementirati
+
+var pacientiTab = [];
+
+
+function generirajPodatke(stPacienta) {
+  ehrId = "";
+  var ehrIdZaVnos = null;
+  sessionId = getSessionId();
+  
+  var pacient = {
+    firstName: null,
+    lastName: null,
+    birthDate: null,
+    gender: null,
+    ehrId: null
+  };
   
   switch(stPacienta){
       case 1:
-        
-        
-          
+        pacient.firstName = "Ata";
+        pacient.lastName = "Smrk";
+        pacient.birthDate = "1970-06-12T14:37";
+        pacient.gender = "MALE";
+        pacientiTab[1] = pacient;
+        //console.log("Pacient[0]"+ pacientiTab[1].firstName + " " + pacientiTab[1].lastName + " " + pacientiTab[1].ehrId);
         break;
           
       case 2:
-          
+        pacient.firstName = "Babica";
+        pacient.lastName = "Smrk";
+        pacient.birthDate = "1945-02-16T11:37";
+        pacient.gender = "FEMALE";
+        pacientiTab[2] = pacient;
+        //console.log("Pacient[1]"+ pacientiTab[2].firstName + " " + pacientiTab[2].lastName + " " + pacientiTab[2].ehrId);
         break;
         
       case 3:
-          
+        pacient.firstName = "Sine";
+        pacient.lastName = "Smrk";
+        pacient.birthDate = "2000-01-01T00:01";
+        pacient.gender = "MALE";
+        pacientiTab[3] = pacient;  
         break;
   }
-  console.log("Generiraj podatke: " + stPacienta);
+  
+    
 
-  //return ehrId;
+	var ime;
+	var priimek;
+	var datumRojstva;
+	var spol;               // MALE/FEMALE so default ehrscape vrednosti
+
+	if (!pacient.firstName || !pacient.lastName || !pacient.birthDate || !pacient.gender) {
+        console.log("Napaka pri kreiranju pacienta");
+		//$("#kreirajSporocilo").html("<span class='obvestilo label " + "label-warning fade-in'>Prosim vnesite zahtevane podatke!</span>");
+	} else {
+		$.ajaxSetup({
+		    headers: {"Ehr-Session": sessionId}
+		});
+		$.ajax({
+		    url: baseUrl + "/ehr",
+		    type: 'POST',
+		    success: function (data) {
+		        var ehrId = data.ehrId;
+		        var partyData = {
+		            firstNames: pacient.firstName,
+		            lastNames: pacient.lastName,
+		            gender: pacient.gender,
+		            dateOfBirth: pacient.birthDate,
+		            partyAdditionalInfo: [
+		                { key: "ehrId", value: ehrId }
+		            ]
+		            
+		        };
+		        $.ajax({
+		            url: baseUrl + "/demographics/party",
+		            type: 'POST',
+		            contentType: 'application/json',
+		            data: JSON.stringify(partyData),
+		            success: function (party) {
+		                if (party.action == 'CREATE') {
+		                    $("#kreirajSporocilo").html("<span class='obvestilo " +
+                          "label label-success fade-in'>Uspešno kreiran EHR '" +
+                          ehrId + "'.</span>");
+		                    $("#preberiEHRid").val(ehrId);
+		                    ehrIdZaVnos = ehrId;
+		                }
+		            },
+		            error: function(err) {
+		            	$("#kreirajSporocilo").html("<span class='obvestilo label " +
+                    "label-danger fade-in'>Napaka '" +
+                    JSON.parse(err.responseText).userMessage + "'!");
+		            }
+		        });
+		    }
+		});
+	}
+	
+	if(stPacienta == 1){
+	    pacientiTab[1].ehrId = ehrIdZaVnos;
+	} else if (stPacienta == 2) {
+	    pacientiTab[2].ehrId = ehrIdZaVnos;
+	} else if (stPacienta == 3) {
+	    pacientiTab[3].ehrId = ehrIdZaVnos;
+	}
+
+  
+  console.log("Generiraj podatke: " + stPacienta + " success");
+
+  return ehrIdZaVnos;
 }
-*/
+
+function izpisiIdje(){
+    console.log("Prvi: " + pacientiTab[1].firstName + " " + pacientiTab[1].lastName + " " + pacientiTab[1].birthDate + " " + pacientiTab[1].ehrId);
+    console.log("Drugi: " + pacientiTab[1].firstName + " " + pacientiTab[1].lastName + " " + pacientiTab[1].birthDate + " " + pacientiTab[1].ehrId);
+    console.log("Tretji: " + pacientiTab[1].firstName + " " + pacientiTab[1].lastName + " " + pacientiTab[1].birthDate + " " + pacientiTab[1].ehrId);
+}
 
 // TODO: Tukaj implementirate funkcionalnost, ki jo podpira vaša aplikacija
 
@@ -66,7 +157,7 @@ function kreirajEHRzaBolnika() {
 	var ime = $("#kreirajIme").val();
 	var priimek = $("#kreirajPriimek").val();
 	var datumRojstva = $("#kreirajDatumRojstva").val();
-	var spol = $('input[name=spol]:checked').val();                 // 1 = moski; 2 = zenska
+	var spol = $('input[name=spol]:checked').val();                 // MALE/FEMALE so default ehrscape vrednosti
 	console.log("Spol: " + spol);
 
 	if (!ime || !priimek || !datumRojstva || ime.trim().length == 0 ||
