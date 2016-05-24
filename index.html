@@ -4,12 +4,19 @@
   <meta charset="utf-8">
   <title>eZdravje :: 4. DN :: OIS 2015/2016</title>
   <link href="knjiznice/css/bootstrap.min.css" rel="stylesheet">
+  <link href="knjiznice/css/stil.css" rel="stylesheet">
   <style>
     body {padding-top: 70px;}
   </style>
   <script src="knjiznice/js/jquery-2.2.3.min.js"></script>
   <script src="knjiznice/js/bootstrap.min.js"></script>
   <script src="knjiznice/js/koda.js"></script>
+  <script type="text/javascript" src="knjiznice/js/countries.js"></script>
+  <script src="https://d3js.org/d3.v3.min.js" language="JavaScript"></script>
+  <script src="knjiznice/js/liquidFillGauge.js" language="JavaScript"></script>
+  <style>
+      .liquidFillGaugeText { font-family: Helvetica; font-weight: bold; }
+  </style>
 </head>
 <body>
 
@@ -22,14 +29,15 @@
           <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
         </button>
         <!-- ZAČETEK: Ime vaše aplikacije -->
-        <a class="navbar-brand" href="index.html">{ime vaše aplikacije}</a>
+        <a class="navbar-brand" href="index.html">LifeExpectancy Analyzer</a>
         <!-- KONEC: Ime vaše aplikacije -->
       </div>
       <div class="collapse navbar-collapse" id="menujska-vrstica">
         <ul class="nav navbar-nav">
           <li><a href="opis.html">Opis ideje</a></li>
           <li><a href="nacrt.html">Načrt informacijske rešitve</a></li>
-          <li><a href="#">Generiranje podatkov</a></li>
+          <!-- <li><a href="#" >Generiranje podatkov</a></li> -->
+          <li><a href="#" type="button" onclick="generirajPodatke(1), generirajPodatke(2), generirajPodatke(3)" >Generiranje podatkov</a></li>
         </ul>
       </div>
     </div>
@@ -40,10 +48,154 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-12 text-center">
-        <p class="lead"><strong>TO-DO</strong>: Na tem mestu implementirajte vašo aplikacijo.</p>
+       
+        <!-- DODATEK START - Kreiraj EHR zapis za pacienta -->
+        
+        <div class="col-lg-6 col-md-6 col-sm-6">
+          <p class="lead" style="text-align: left"><strong>1. KORAK</strong>: EHR ID</p>
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+						<div class="row">
+							<div class="col-lg-8 col-md-8 col-sm-8"><b>Pridobite svoj osebni EHR ID</b><br>(Če EHD ID že imate, preskočite ta korak)</div>
+							<div class="col-lg-4 col-md-4 col-sm-4"><select class="form-control input-sm" id="preberiPredlogoBolnika"><option value=""></option><option value="Pujsa,Pepa,1938-10-30T14:58">Pujsa Pepa</option></select></div>
+						</div>
+					</div>
+					<div class="panel-body">
+						<span class="input-group-addon">Ime</span><input id="kreirajIme" type="text" class="form-control input-mini" placeholder="Janez">
+						<span class="input-group-addon">Priimek</span><input id="kreirajPriimek" type="text" class="form-control" placeholder="Novak">
+						<span class="input-group-addon">Datum rojstva (YYYY-MM-ddThh:mm)</span><input id="kreirajDatumRojstva" type="text" class="form-control" placeholder="1970-03-10T12:30">
+						<span class="input-group-addon">Spol</span><input id="spol" type="radio" name="spol" value="MALE" checked> Moški</input> <input id="spol" type="radio" name="spol" value="FEMALE"> Ženski </input><br>
+						<button type="button" class="btn btn-primary btn-l" style="margin-top: 15px" onclick="kreirajEHRzaBolnika()">Pridobi EHR ID</button><span id="kreirajSporocilo"></span>
+				  	</div>
+				</div>
+				 <!-- DODATEK END - Kreiraj EHR zapis za pacienta -->
+				 
+				 <!-- DODATEK START - Kajenje/Gibanje -->
+				 <p class="lead" style="text-align: left"><strong>3. KORAK</strong>: Ostale zdravstvene podrobnosti</p>
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+						<div class="row">
+							<div class="col-lg-8 col-md-8 col-sm-8">Vnesite <b>ostale zdravstvene podrobnosti</b><br>(Vnos podatkov označenih z * je obvezen)</div>
+							<div class="col-lg-4 col-md-4 col-sm-4"><select class="form-control input-sm" id="preberiPredlogoBolnika"><option value=""></option><option value="Pujsa,Pepa,1938-10-30T14:58">Pujsa Pepa</option></select></div>
+						</div>
+					</div>
+					<div class="panel-body">
+					  <span class="input-group-addon">EHR ID</span><input id="dodajVitalnoEHRtretjiKorak" type="text" class="form-control input-mini" placeholder="7b661e12-3a98-21ad-c29e-2dc9f5a3d885">
+						<span class="input-group-addon">Kadilec</span><input id="kadilec" type="radio" name="kadilec" value="0" checked> Ne <input id="kadilec" type="radio" name="kadilec" value="1"> Da <br>
+						<span class="input-group-addon">Telesna aktivnost (ur/teden)</span></span><input id="tedenskaAktivnost" type="text" class="form-control input-mini" placeholder="3">
+						<span class="input-group-addon">Enote alkohola na teden (2.5dl piva / 1dl vina / 0.3dl žganja = 1 enota)</span><input id="enoteAlkoTeden" type="text" class="form-control input-mini" placeholder="1">
+						<span class="input-group-addon">Država</span><select id="country2" name ="country2" class="form-control input-sm"></select>
+            <script language="javascript">
+              populateCountries("country2");
+            </script>
+						<button type="button" class="btn btn-success btn-l" style="margin-top: 15px" onclick="zdruziPodatke()">Analiziraj življenski slog</button><span id="kreirajSporocilo"></span>
+				  	</div>
+				</div>
+			</div>
+       <!-- DODATEK END - Kajenje/Gibanje --> 
+        
+        
+        <!-- DODATEK START - Vnos meritve vitalnih znakov -->
+        <p class="lead" style="text-align: left"><strong>2. KORAK</strong>: Vitalni znaki</p>
+        <div class="col-lg-6 col-md-6 col-sm-6">
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+						<div class="row">
+							<div class="col-lg-8 col-md-8 col-sm-8">Vnesite <b>meritve svojih vitalnih znakov</b><br>(Meritve, označene z * so obvezne)</div>
+							<div class="col-lg-4 col-md-4 col-sm-4"><select class="form-control input-sm" id="preberiObstojeciVitalniZnak"><option value=""></option><option value="b931580f-2b05-488b-985b-8d9ffb08ad02|2014-11-21T11:40Z|185|80.0|36.50|118|92|98|medicinska sestra Smrketa">Ata Smrk</option></select></div>
+						</div>
+					</div>
+					<div class="panel-body">
+						<div class="input-group"><span class="input-group-addon">EHR ID*</span><input id="dodajVitalnoEHR" type="text" class="form-control input-mini" placeholder="7b661e12-3a98-21ad-c29e-2dc9f5a3d885"></div>
+						<div class="input-group"><span class="input-group-addon">Datum in ura</span><input id="dodajVitalnoDatumInUra" type="text" class="form-control input-mini" placeholder="2014-11-21T11:40Z"></div>
+						<div class="input-group"><span class="input-group-addon">Telesna višina*</span><input id="dodajVitalnoTelesnaVisina" type="text" class="form-control input-mini" placeholder="185"><span class="input-group-addon">cm</span></div>
+						<div class="input-group"><span class="input-group-addon">Telesna teža*</span><input id="dodajVitalnoTelesnaTeza" type="text" class="form-control input-mini" placeholder="80.00"><span class="input-group-addon">kg</span></div>
+						<div class="input-group"><span class="input-group-addon">Telesna temperatura </span><input id="dodajVitalnoTelesnaTemperatura" type="text" class="form-control input-mini" placeholder="36.50"><span class="input-group-addon">°C</span></div>
+						<div class="input-group"><span class="input-group-addon">Sistolični krvni tlak*</span><input id="dodajVitalnoKrvniTlakSistolicni" type="text" class="form-control input-mini" placeholder="118"><span class="input-group-addon">mm Hg</span></div>
+						<div class="input-group"><span class="input-group-addon">Diastolični krvni tlak*</span><input id="dodajVitalnoKrvniTlakDiastolicni" type="text" class="form-control input-mini" placeholder="92"><span class="input-group-addon">mm Hg</span></div>
+						<div class="input-group"><span class="input-group-addon">Nasičenost krvi s kisikom</span><input id="dodajVitalnoNasicenostKrviSKisikom" type="text" class="form-control input-mini" placeholder="98"><span class="input-group-addon">%</span></div>
+						<button type="button" class="btn btn-primary btn-l" style="margin-top: 15px" onclick="dodajMeritveVitalnihZnakov()">Dodaj meritve vitalnih znakov</button><span id="dodajMeritveVitalnihZnakovSporocilo"></span>
+				  	</div>
+				</div>
+			</div>
+        <!-- DODATEK END - Vnost meritve vitalnih znakov -->
       </div>
     </div>
+    
+    <div id="rezulati" style="display:none">
+    	
+    	<!-- Izpis rezultatov -->
+    	<div class="col-lg-6 col-md-6 col-sm-6">
+    		<p class="lead"><strong>Rezultati</strong></p>
+				<div class="panel panel-success">
+					<div class="panel-heading">
+						<div class="row">
+							<div class="col-lg-8 col-md-8 col-sm-8">Pregled <b>življenjskega sloga </b>in <strong>rezultati.</strong></div>
+						</div>
+					</div>
+					<div class="panel-body">
+					  <span><h4><u><strong>Splošna ocena</strong> življenjskega sloga</h4></u></span>
+					  <ul style="list-style-type:none">
+					    <span>Vaš življenjski slog </span><span id="splosnaOcena"></span><br>
+					  </ul>
+					  <span><u><h4>Nasveti za <strong>izboljšanje</strong> življenjskega sloga</h4></u></span>
+						<ul style="list-style-type:none">
+            	<span id="kajenje"></span>
+						  <span id="ITM"></span>
+						  <span id="tlak"></span>
+						  <span id="alkohol"></span>
+						  <span id="sport"></span>
+            </ul>
+            <span><u><h4>Izračun <strong>življenjske dobe</strong></h4></u></span>
+              <ul style="list-style-type:none">
+                <span id="starost"></span>
+                <span id="pricakovanaDoba"></span>
+                <span id="toGo"></span>
+                <span id="deltaLifestyle"></span>
+              </ul>
+					</div>
+				</div>
+			</div>
+			<!-- Izpis rezultatov END -->
+			
+			<!-- Vizualizacija -->
+			<div class="col-lg-6 col-md-6 col-sm-6">
+    		<p class="lead"><strong>Vizualizacija</strong></p>
+				<div class="panel panel-success">
+					<div class="panel-heading">
+						<div class="row">
+							<div class="col-lg-8 col-md-8 col-sm-8">Grafični prikaz <b>življenjskega sloga</b><strong>.</strong></div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4 text-center">
+							<svg id="fillgauge1" width="70%" height="250"></svg>
+							
+						</div>
+						<div class="col-md-4 text-center">
+							<svg id="fillgauge2" width="70%" height="250"></svg>
+							
+						</div>
+						<div class="col-md-4 text-center">
+							<svg id="fillgauge3" width="70%" height="250"></svg>
+							
+						</div>
+					</div>
+					  <script language="JavaScript">
+					  
+					  	
+					    
+				    </script>
+					</div>
+				</div>
+			</div>
+			<!-- Vizualizacija END -->
+			
+		<!-- Display: none DIV!!! -->	
+		</div>
+		<div id="resultDiv"></div>
   </div>
+ 
   <!-- KONEC: Vsebina aplikacije -->
 
 </body>
