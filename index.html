@@ -53,6 +53,7 @@
         <span id="kreirajSporocilo1" style="text-align: left"></span>
         <span id="kreirajSporocilo2" style="text-align: left"></span>
         <span id="kreirajSporocilo3" style="text-align: left"></span>
+        <span id="kreirajSporociloError" style="text-align: left"></span>
         
         <div class="col-lg-6 col-md-6 col-sm-6">
           <p class="lead" style="text-align: left"><strong>1. KORAK</strong>: EHR ID</p>
@@ -80,7 +81,7 @@
 					<div class="panel-heading">
 						<div class="row">
 							<div class="col-lg-8 col-md-8 col-sm-8">Vnesite <b>ostale zdravstvene podrobnosti</b><br>(Vnos podatkov označenih z * je obvezen)</div>
-							<div class="col-lg-4 col-md-4 col-sm-4"><select class="form-control input-sm" id="preberiPredlogoBolnika"><option value=""></option><option value="Pujsa,Pepa,1938-10-30T14:58">Pujsa Pepa</option></select></div>
+							<div class="col-lg-4 col-md-4 col-sm-4"><select class="form-control input-sm" id="meniPacientov" onchange="vnesiIdIzMenija('meniPacientov')"></select></div>
 						</div>
 					</div>
 					<div class="panel-body">
@@ -173,23 +174,20 @@
 					</div>
 					<div class="row">
 						<div class="col-md-4 text-center">
-							<svg id="fillgauge1" width="70%" height="250"></svg>
+							<svg id="fillgauge1" width="100%" height="250"></svg>
 							
 						</div>
 						<div class="col-md-4 text-center">
-							<svg id="fillgauge2" width="70%" height="250"></svg>
+							<svg id="fillgauge2" width="100%" height="250"></svg>
 							
 						</div>
 						<div class="col-md-4 text-center">
-							<svg id="fillgauge3" width="70%" height="250"></svg>
+							<svg id="fillgauge3" width="100%" height="250"></svg>
 							
 						</div>
 					</div>
 					  <script language="JavaScript">
-					  
-					  	
-					    
-				    </script>
+					  </script>
 					</div>
 				</div>
 			</div>

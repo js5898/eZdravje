@@ -32,12 +32,14 @@ function getSessionId() {
  */
 
 
-var pacientiTab = [];
-var globalTest;
+
+var pacientiTab = [];               // Global spremenljivka za tabelo pacientov
 
 
+// Funkcija se iz HTMLja poklice 3× - generirajo se trije default pacienti, ID ostane null, izpolni se ko pride callback iz ehrsapa
 function generirajPodatke(stPacienta) {
   
+  // Objekt za shranjevanje pacientov - osnovni podatki + EHR id
   var pacient = {
     firstName: null,
     lastName: null,
@@ -59,7 +61,7 @@ function generirajPodatke(stPacienta) {
       case 2:
         pacient.firstName = "Babica";
         pacient.lastName = "Smrk";
-        pacient.birthDate = "1945-02-16T11:37";
+        pacient.birthDate = "1955-02-16T11:37";
         pacient.gender = "FEMALE";
         pacientiTab[2] = pacient;
         //console.log("Pacient[1]"+ pacientiTab[2].firstName + " " + pacientiTab[2].lastName + " " + pacientiTab[2].ehrId);
@@ -74,30 +76,89 @@ function generirajPodatke(stPacienta) {
         break;
   }
   
+    // Klic funkcije za kreiranje kartoteke iz pridobitev EHRidja
     kreirajEHRauto(pacient, stPacienta, function(ehrIdcall){
-        console.log("stPacienta: " +stPacienta);
-        if(stPacienta == 1){
-	        pacientiTab[1].ehrId = ehrIdcall;
-	    } else if (stPacienta == 2) {
-	        pacientiTab[2].ehrId = ehrIdcall;
-	    } else if (stPacienta == 3) {
-	        pacientiTab[3].ehrId = ehrIdcall;
-	    }
-	    
-	    if(pacientiTab[1].ehrId != null && pacientiTab[2].ehrId != null && pacientiTab[3].ehrId != null){
-    	    for(var i = 1; i <= 3; i++){
-                console.log("pacient: " + i + " : " + pacientiTab[i].ehrId);
-                dodajMeritveVitalnihZnakovAuto(i);
-            }
-	    }
+        if(ehrIdcall != null){
+            console.log("stPacienta: " +stPacienta);
+            if(stPacienta == 1){
+    	        pacientiTab[1].ehrId = ehrIdcall;
+    	    } else if (stPacienta == 2) {
+    	        pacientiTab[2].ehrId = ehrIdcall;
+    	    } else if (stPacienta == 3) {
+    	        pacientiTab[3].ehrId = ehrIdcall;
+    	    }
+    	    
+    	    // Pri zadnjem klicu funkcije - ko imajo vsi trije pacienti ze callback z ehridjem, generiraj default podatke
+    	    if(pacientiTab[1].ehrId != null && pacientiTab[2].ehrId != null && pacientiTab[3].ehrId != null){
+        	    
+        	    // Generiraj 3 meritve vitalnih znakov za vsakega pacienta
+        	    for(var i = 1; i <= 3; i++){
+                    console.log("pacient: " + i + " : " + pacientiTab[i].ehrId);
+                    dodajMeritveVitalnihZnakovAuto(i);
+                }
+                
+                // Fill dropdown liste z tremi default pacienti - klice se samo, kadar se klice generiranje podatkov
+                fillMenu();
+    	    }
+        } else {
+            $("#kreirajSporociloError").html("<span class='obvestilo label " + "label-warning fade-in'>EHR IDja ni bilo mogoce pridobiti</span>");
+        }
     });
   
-  console.log("Generiraj podatke: " + stPacienta + " success");
-  
-  
+  //console.log("Generiraj podatke: " + stPacienta + " success");
+}
+
+// Fill dropdown liste z tremi default pacienti - klice se samo, kadar se klice generiranje podatkov
+    // Sele ko je dolocen pacient selectan iz menija, se klice vnesiIdIzMenija(), ki filla podatke
+function fillMenu(){
+    $("#meniPacientov").html("<option value='0'></option><option value='1'>Ata Smrk</option><option value='2'>Babica Smrk</option><option value='3'>Sine Smrk</option>");
 }
 
 
+// Izpolni ostala polja obrazca, ko je izbran pacient iz menija - vse, razen EHRidja so konstante
+// TODO izbira radio buttona se ne deluje!!!
+function vnesiIdIzMenija(meniPacientov){
+        
+        //console.log("MPV2: "+ $("#meniPacientov").val());
+        //console.log("Se klice");
+        
+        switch($("#meniPacientov").val()){
+            case '0':
+                $("#dodajVitalnoEHRtretjiKorak").val('');
+                //TODO $("#kadilec").val("1");
+                $("#tedenskaAktivnost").val("");
+                $("#enoteAlkoTeden").val("");
+                $("#country2").val("Select Country");
+                break;
+            
+            case '1':
+                $("#dodajVitalnoEHRtretjiKorak").val(pacientiTab[1].ehrId);
+                //TODO $("#kadilec").val("1");
+                $("#tedenskaAktivnost").val("2");
+                $("#enoteAlkoTeden").val("25");
+                $("#country2").val("Slovenia");
+                break;
+                
+            case '2':
+                $("#dodajVitalnoEHRtretjiKorak").val(pacientiTab[2].ehrId);
+                //TODO $("#kadilec").val("1");
+                $("#tedenskaAktivnost").val("0");
+                $("#enoteAlkoTeden").val("11");
+                $("#country2").val("Zambia");
+                break;
+                
+            case '3':
+                $("#dodajVitalnoEHRtretjiKorak").val(pacientiTab[3].ehrId);
+                //TODO $("#kadilec").val("1");
+                $("#tedenskaAktivnost").val("12");
+                $("#enoteAlkoTeden").val("2");
+                $("#country2").val("Canada");
+                break;
+        }
+}
+
+
+// Dobi podatke o pacientu in stevilko pacienta, v callbacku vrne njegov EHRid, if error - null
 function kreirajEHRauto(pacient, stPacienta, callback){
     ehrId = "";
     sessionId = getSessionId();
@@ -105,7 +166,7 @@ function kreirajEHRauto(pacient, stPacienta, callback){
 
 	if (!pacient.firstName || !pacient.lastName || !pacient.birthDate || !pacient.gender) {
         console.log("Napaka pri kreiranju pacienta");
-		//$("#kreirajSporocilo").html("<span class='obvestilo label " + "label-warning fade-in'>Prosim vnesite zahtevane podatke!</span>");
+		$("#kreirajSporociloError").html("<span class='obvestilo label " + "label-warning fade-in'>Prosim vnesite zahtevane podatke!</span>");
 	} else {
 		$.ajaxSetup({
 		    headers: {"Ehr-Session": sessionId}
@@ -150,7 +211,7 @@ function kreirajEHRauto(pacient, stPacienta, callback){
 		                }
 		            },
 		            error: function(err) {
-		            	$("#kreirajSporocilo").html("<span class='obvestilo label " +
+		            	$("#kreirajSporociloError").html("<span class='obvestilo label " +
                     "label-danger fade-in'>Napaka '" +
                     JSON.parse(err.responseText).userMessage + "'!");
                             callback(null);
@@ -161,6 +222,8 @@ function kreirajEHRauto(pacient, stPacienta, callback){
 	}
 }
 
+
+// Avtomatsko generiranje treh meritev za default paciente - napolni se objekt meritve, klice se funkcija vnesi meritve
 function dodajMeritveVitalnihZnakovAuto(stPacienta){
     
     var meritve = {
@@ -286,13 +349,14 @@ function dodajMeritveVitalnihZnakovAuto(stPacienta){
             
             break;
     }
-    
 }
 
+
+// Funkcija, ki bere meritve iz objekta meritve in jih avtomatsko vpiše pacientom glede na njihov ID
 function vpisiMeritve(stPacienta, meritve){
     sessionId = getSessionId();
     if (!meritve.ehrId || meritve.ehrId.trim().length == 0) {
-		$("#dodajMeritveVitalnihZnakovSporocilo").html("<span class='obvestilo " +
+		$("#kreirajSporociloError").html("<span class='obvestilo " +
       "label label-warning fade-in'>Prosim vnesite zahtevane podatke!</span>");
 	} else {
 		$.ajaxSetup({
@@ -323,15 +387,11 @@ function vpisiMeritve(stPacienta, meritve){
 		    contentType: 'application/json',
 		    data: JSON.stringify(podatki),
 		    success: function (res) {
-		        $("#dodajMeritveVitalnihZnakovSporocilo").html(
-              "<span class='obvestilo label label-success fade-in'>" +
-              res.meta.href + ".</span>");
-              console.log("success?");
+		      //$("#dodajMeritveVitalnihZnakovSporocilo").html("<span class='obvestilo label label-success fade-in'>" + res.meta.href + ".</span>");
+              console.log("Uspesen vnos meritev");
 		    },
 		    error: function(err) {
-		    	$("#dodajMeritveVitalnihZnakovSporocilo").html(
-            "<span class='obvestilo label label-danger fade-in'>Napaka '" +
-            JSON.parse(err.responseText).userMessage + "'!");
+		    	$("#dodajMeritveVitalnihZnakovSporocilo").html("<span class='obvestilo label label-danger fade-in'>Napaka '" + JSON.parse(err.responseText).userMessage + "'!");
 		    }
 		});
 	}
@@ -339,16 +399,16 @@ function vpisiMeritve(stPacienta, meritve){
 
 
 
-
+// TODO funkcija za testni vnos meritev - za brisanje
 function izpisiIdje(){
     console.log("Prvi: " + pacientiTab[1].firstName + " " + pacientiTab[1].lastName + " " + pacientiTab[1].birthDate + " " + pacientiTab[1].ehrId);
     console.log("Drugi: " + pacientiTab[2].firstName + " " + pacientiTab[2].lastName + " " + pacientiTab[2].birthDate + " " + pacientiTab[2].ehrId);
     console.log("Tretji: " + pacientiTab[3].firstName + " " + pacientiTab[3].lastName + " " + pacientiTab[3].birthDate + " " + pacientiTab[3].ehrId);
-    console.log("Global test: " + globalTest);
 }
 
-// TODO: Tukaj implementirate funkcionalnost, ki jo podpira vaša aplikacija
 
+// TODO - To delete --> Funkcija za GUI vnos meritev
+/*
 function kreirajEHRzaBolnika() {
 	sessionId = getSessionId();
 
@@ -405,6 +465,8 @@ function kreirajEHRzaBolnika() {
 	}
 }
 
+
+// TODO - To delete - funkcija za vnos meritev vitalnih znakov
 function dodajMeritveVitalnihZnakov() {
 	sessionId = getSessionId();
 
@@ -462,6 +524,11 @@ function dodajMeritveVitalnihZnakov() {
 		});
 	}
 }
+*/
+// TODO - Konec funkcij za brisanje
+
+
+// Konstante za izracun expected lifestyla
 
 const kadilec = -10;             // Kajenje vec kot 30 let
 const overweight = -1;           // ITM 25-29.9
@@ -479,6 +546,10 @@ Systolic: Stage 1 = 140-159     Stage 2 = 160+
 Diastolic: Stage 1 = 90-99      Stage 2 = 100+
 */
 
+
+// Izracun lifestyla - klice funkcije za branje dolocenih podatkov glede na EHR ID
+    // Kreira objekt izpis, ga poslje funkciji za GUI izpis
+    // Kreira objekt vizualizacija, poslje ga funkciji za vizualizacjo
 function zdruziPodatke() {
     
     var ehrId = $("#dodajVitalnoEHRtretjiKorak").val();
@@ -503,21 +574,24 @@ function zdruziPodatke() {
     var leto = d.getFullYear();
     console.log(leto);
     
+    
     console.log(drzava);
-    // za tezo res[i].time, res[i].weight, res[i].unit
     
     preberiEHRodBolnika(ehrId, function(data) {
-        //console.log(data.party.firstNames + " " + data.party.lastNames);
+        
+        if(data != null){
         ime = data.party.firstNames;
         priimek = data.party.lastNames;
         letoRojstva = data.party.dateOfBirth.substring(0,4);
         spol = data.party.gender;
         
         
+        
         console.log("shranjeno v js: " + priimek + " " + ime + " Datum: " + letoRojstva + " Spol: " + spol);
         
         preberiTezo(ehrId, function(res){
             teza = res;
+            // 
             var indeksZadnjeMeritve = (teza.length) - 1;
             tezaZadnja = teza[indeksZadnjeMeritve].weight;
                 
@@ -646,16 +720,39 @@ function zdruziPodatke() {
                         };
                         
                         izpisRezultatov(izpis);
-                        vizualizacija();
+                        console.log("Odbitek splosen zgoraj: "+ odbitekSplosen);
+                        
+                        var vizData = {
+                            seOstaloZivljenja: toGo,
+                            odbitekLifestyle: Math.abs(odbitekSplosen),
+                            obSpremembi: function(){
+                                if(spol == "MALE"){
+                                    return expDobaM;
+                                } else {
+                                    return expDobaZ;
+                                }
+                            }
+                            
+                        };
+                        
+                        vizualizacija(vizData);
                     })
                 })
         })
+    
+    } else {
+        console.log("Error - ID ne obstaja");
+        $("#kreirajSporociloError").html("<span class='obvestilo " +
+      "label label-danger fade-in'>Zahtevani EHR ID ne obstaja</span>");
+    }
     });
 }
 
-function vizualizacija() {
+
+// Izris krogov
+function vizualizacija(vizData) {
     // Modri krog
-  	var gauge1 = loadLiquidFillGauge("fillgauge1", 55);
+  	var gauge1 = loadLiquidFillGauge("fillgauge1", (vizData.obSpremembi() - vizData.seOstaloZivljenja));
 	var config1 = liquidFillGaugeDefaultSettings();
     config1.circleColor = "#FF7777";
     config1.textColor = "#FF4444";
@@ -664,34 +761,38 @@ function vizualizacija() {
     config1.circleThickness = 0.2;
     config1.textVertPosition = 0.2;
     config1.waveAnimateTime = 1000;
+    config1.displayPercent = false;
     
     
     // Rdeči krog
-     var gauge2= loadLiquidFillGauge("fillgauge2", 28, config1);
-   var config2 = liquidFillGaugeDefaultSettings();
-   config2.circleColor = "#D4AB6A";
-   config2.textColor = "#553300";
-   config2.waveTextColor = "#805615";
-   config2.waveColor = "#AA7D39";
-   config2.circleThickness = 0.1;
-     config2.circleFillGap = 0.2;
-     config2.textVertPosition = 0.8;
-   config2.waveAnimateTime = 2000;
-   config2.waveHeight = 0.3;
-   config2.waveCount = 1;
+    console.log("Viz data - odb lifestyle: "+ vizData.odbitekLifestyle);
+    var gauge2= loadLiquidFillGauge("fillgauge2", vizData.odbitekLifestyle, config1);
+    var config2 = liquidFillGaugeDefaultSettings();
+    config2.circleColor = "#D4AB6A";
+    config2.textColor = "#553300";
+    config2.waveTextColor = "#805615";
+    config2.waveColor = "#AA7D39";
+    config2.circleThickness = 0.1;
+    config2.circleFillGap = 0.2;
+    config2.textVertPosition = 0.8;
+    config2.waveAnimateTime = 2000;
+    config2.waveHeight = 0.3;
+    config2.waveCount = 1;
     
     // Zeleni krog
-    var gauge3 = loadLiquidFillGauge("fillgauge3", 55);
+    var gauge3 = loadLiquidFillGauge("fillgauge3", vizData.obSpremembi(), config2);
 	var config3 = liquidFillGaugeDefaultSettings();
-    config3.circleColor = "#FF7777";
+    config3.circleColor = "#33CC59";
     config3.textColor = "#FF4444";
     config3.waveTextColor = "#FFAAAA";
-    config3.waveColor = "#FFDDDD";
+    config3.waveColor = "#33CC33";
     config3.circleThickness = 0.2;
     config3.textVertPosition = 0.2;
     config3.waveAnimateTime = 1000;
 }
 
+
+// Izpis rezultatov
 function izpisRezultatov(rezultati){
     $("#rezulati").slideDown();
                         
@@ -710,8 +811,8 @@ function izpisRezultatov(rezultati){
     if(rezultati.odbitekTlak < 0) $("#tlak").html("Vaš krvni tlak je <strong>previsok.</strong> Posvetujte se z zdravnikom.<br>");
     if(rezultati.pribitekSport < 3) $("#sport").html("Tedensko se <strong>premalo</strong> ukvarjate s športom.<br>");
                 
-    $("#starost").html("Vaša starost je <strong><u>" + rezultati.starost + "</u></strong> let.<br>");
-    if(spol == "MALE") {
+    $("#starost").html("Vaša starost je <strong><u>" + rezultati.starost + "</u></strong> let.<br>S trenutnim življenjskim slogom boste dočakali <strong><u>" + (rezultati.starost + rezultati.toGo) +"</strong></u> let.<br>");
+    if(rezultati.spol == "MALE") {
         $("#pricakovanaDoba").html("Pričakovana življenjska doba za moške v vaši državi je <strong><u>" + rezultati.expDobaM + "</u></strong> let.<br>");
     } else {
         $("#pricakovanaDoba").html("Pričakovana življenjska doba za ženske v vaši državi je <strong><u>" + rezultati.expDobaZ + "</u></strong> let.<br>");
@@ -721,11 +822,15 @@ function izpisRezultatov(rezultati){
 
 }
 
+// Dobi EHRid, vrne osnovne podatke o bolniku
 function preberiEHRodBolnika(ehrId, callback) {
 	sessionId = getSessionId();
         var globalUser = new Object();
         
     	if (!ehrId || ehrId.trim().length == 0) {
+    	     $("#kreirajSporociloError").html("<span class='obvestilo " +
+                "label label-warning fade-in'>Vnesite EHRid</span>");
+    	    
     	    return null;
     	} else {
     		$.ajax({
@@ -733,35 +838,30 @@ function preberiEHRodBolnika(ehrId, callback) {
     			type: 'GET',
     			headers: {"Ehr-Session": sessionId},
     	    	success: function (data) {
-    	    	    
-    				//var party = data.party;
     				callback(data);
     			},
     			error: function(err) {
-    			    callback(null);
+    			    
+                    callback(null);
     			}
     		});
      }
 }
 
-
+// Vrne tabelo teze - za izracune
 function preberiTezo(ehrId, callback) {
 	sessionId = getSessionId();
 
-	//var ehrId = $("#dodajVitalnoEHRtretjiKorak").val();
-	
 	if(!ehrId || ehrId.trim().length == 0){
 	    callback(null);
 	} else {
 	    // Telesna teza
-	    
 	    $.ajax({
 			url: baseUrl + "/view/" + ehrId + "/" + "weight",
 			type: 'GET',
 			headers: {"Ehr-Session": sessionId},
 			success: function (res) {
 			    if (res.length > 0) {
-			        //var output = res;
 					callback(res);
 				} else {
 					callback(null); 
@@ -774,7 +874,7 @@ function preberiTezo(ehrId, callback) {
 	}
 }
 
-
+// Vrne tabelo visin - za izracune
 function preberiVisino(ehrId, callback) {
 	sessionId = getSessionId();
 
@@ -806,6 +906,7 @@ function preberiVisino(ehrId, callback) {
 	}
 }
 
+// Vrne tabelo tlaka - za izracune
 function preberiTlak(ehrId, callback){
     sessionId = getSessionId();
 
@@ -834,5 +935,3 @@ function preberiTlak(ehrId, callback){
 		});
 	}
 }
-
-
