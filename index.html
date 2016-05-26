@@ -9,6 +9,7 @@
     body {padding-top: 70px;}
   </style>
   <script src="knjiznice/js/jquery-2.2.3.min.js"></script>
+  
   <script src="knjiznice/js/bootstrap.min.js"></script>
   <script src="knjiznice/js/koda.js"></script>
   <script type="text/javascript" src="knjiznice/js/countries.js"></script>
@@ -50,11 +51,13 @@
       <div class="col-lg-12 text-center">
        
         <!-- DODATEK START - Kreiraj EHR zapis za pacienta -->
+        <span id="kreirajSporociloZunanjiVir" style="text-align: left"></span>
         <span id="kreirajSporocilo1" style="text-align: left"></span>
         <span id="kreirajSporocilo2" style="text-align: left"></span>
         <span id="kreirajSporocilo3" style="text-align: left"></span>
-        <span id="kreirajSporociloError" style="text-align: left"></span>
-        
+        <span id="kreirajSporociloError" style="text-align: left"></span><br><br>
+        <img src="knjiznice/other/Logo1.png" alt="Logo" style="width:305px;height:175px;"><br><br>
+        <!--
         <div class="col-lg-6 col-md-6 col-sm-6">
           <p class="lead" style="text-align: left"><strong>1. KORAK</strong>: EHR ID</p>
 				<div class="panel panel-primary">
@@ -73,10 +76,12 @@
 						<button type="button" class="btn btn-primary btn-l" style="margin-top: 15px" onclick="izpisiIdje()">izpisi log</button>
 				  	</div>
 				</div>
+				-->
 				 <!-- DODATEK END - Kreiraj EHR zapis za pacienta -->
 				 
 				 <!-- DODATEK START - Kajenje/Gibanje -->
-				 <p class="lead" style="text-align: left"><strong>3. KORAK</strong>: Ostale zdravstvene podrobnosti</p>
+				 <!-- <div class="col-lg-6 col-md-6 col-sm-6"> -->
+				 <p class="lead" style="text-align: left">Vnesite<strong> ostale zdravstvene podrobnosti </strong>pacienta</p>
 				<div class="panel panel-primary">
 					<div class="panel-heading">
 						<div class="row">
@@ -86,21 +91,23 @@
 					</div>
 					<div class="panel-body">
 					  <span class="input-group-addon">EHR ID</span><input id="dodajVitalnoEHRtretjiKorak" type="text" class="form-control input-mini" placeholder="7b661e12-3a98-21ad-c29e-2dc9f5a3d885">
-						<span class="input-group-addon">Kadilec</span><input id="kadilec" type="radio" name="kadilec" value="0" checked> Ne <input id="kadilec" type="radio" name="kadilec" value="1"> Da <br>
-						<span class="input-group-addon">Telesna aktivnost (ur/teden)</span></span><input id="tedenskaAktivnost" type="text" class="form-control input-mini" placeholder="3">
-						<span class="input-group-addon">Enote alkohola na teden (2.5dl piva / 1dl vina / 0.3dl žganja = 1 enota)</span><input id="enoteAlkoTeden" type="text" class="form-control input-mini" placeholder="1">
+						<span class="input-group-addon">Kadilec</span><input id="kadilec_ne" type="radio" name="kadilec" value="0" checked> Ne <input id="kadilec_da" type="radio" name="kadilec" value="1"> Da <br>
+						<span class="input-group-addon">Telesna aktivnost (ur/teden)</span></span><input id="tedenskaAktivnost" type="text" class="form-control input-mini" placeholder="0">
+						<span class="input-group-addon">Enote alkohola na teden (2.5dl piva / 1dl vina / 0.3dl žganja = 1 enota)</span><input id="enoteAlkoTeden" type="text" class="form-control input-mini" placeholder="0">
 						<span class="input-group-addon">Država</span><select id="country2" name ="country2" class="form-control input-sm"></select>
             <script language="javascript">
               populateCountries("country2");
             </script>
+            <span id="kreirajSporociloVnos" style="text-align: left"></span><span id="kreirajSporociloVnos" style="text-align: left"></span><br>
 						<button type="button" class="btn btn-success btn-l" style="margin-top: 15px" onclick="zdruziPodatke()">Analiziraj življenski slog</button><span id="kreirajSporocilo"></span>
 				  	</div>
 				</div>
-			</div>
+			<!--</div> -->
        <!-- DODATEK END - Kajenje/Gibanje --> 
         
         
         <!-- DODATEK START - Vnos meritve vitalnih znakov -->
+        <!--
         <p class="lead" style="text-align: left"><strong>2. KORAK</strong>: Vitalni znaki</p>
         <div class="col-lg-6 col-md-6 col-sm-6">
 				<div class="panel panel-primary">
@@ -123,6 +130,7 @@
 				  	</div>
 				</div>
 			</div>
+			-->
         <!-- DODATEK END - Vnost meritve vitalnih znakov -->
       </div>
     </div>
@@ -175,25 +183,45 @@
 					<div class="row">
 						<div class="col-md-4 text-center">
 							<svg id="fillgauge1" width="100%" height="250"></svg>
-							
+							<p><b>Pričakovana</b> življenjska doba glede na <b>trenuten</b> življenski slog.</p><br><br>
 						</div>
 						<div class="col-md-4 text-center">
 							<svg id="fillgauge2" width="100%" height="250"></svg>
-							
+							<p><b>Zmanjšanje</b> življenjske dobe zaradi <b>življenjskega sloga.</b></p>
 						</div>
 						<div class="col-md-4 text-center">
 							<svg id="fillgauge3" width="100%" height="250"></svg>
-							
+							<p><b>Pričakovana</b> življenjska doba z <b>zdravim</b> življenjskim slogom.</p>
 						</div>
 					</div>
 					  <script language="JavaScript">
 					  </script>
 					</div>
 				</div>
+				
+				
+				<!-- Master-detail meritve in kartoteka -->
+				<div class="col-lg-6 col-md-6 col-sm-6">
+    		<p class="lead">Pregled<strong> zgodovine meritev</strong></p>
+				<div class="panel panel-success">
+					<div class="panel-heading">
+						<div class="row">
+							<div class="col-lg-8 col-md-8 col-sm-8">Pregled <b>življenjskega sloga </b>in <strong>rezultati.</strong></div>
+							<div class="col-lg-4 col-md-4 col-sm-4"><select class="form-control input-sm" id="izpisiMeritve" onchange="izpisiTabeloMeritev()"> <option value="0"></option> <option value="1">Teža</option><option value="2">Višina</option><option value="3">ITM</option></select></div>
+						</div>
+					</div>
+					<div class="panel-body">
+					  <div id="poljeZaIzpisTabele"></div>
+					</div>
+				</div>
 			</div>
+				<!-- END Master-detail meritve in kartoteka -->
+				
+			</div> <!-- Div za display: none -->
 			<!-- Vizualizacija END -->
 			
-		<!-- Display: none DIV!!! -->	
+			
+		
 		</div>
 		<div id="resultDiv"></div>
   </div>
