@@ -584,6 +584,7 @@ function zdruziPodatke() {
     var leto = d.getFullYear();
     console.log(leto);
     var toGo;
+    var i;
     console.log("Select country return: " + drzava);
     globalEhrId = ehrId;
     
@@ -640,8 +641,13 @@ function zdruziPodatke() {
                             }
                         } 
                         if(match == false){
-                            $("#kreirajSporociloVnos").html("<span class='obvestilo " +
-                            "label label-warning fade-in'>Za izbrano državo ni podatkov, zato izračun ni mogoč.<br>Prosimo izberite drugo državo.</span>");
+                            if(tableParsed == false){
+                                $("#kreirajSporociloVnos").html("<span class='obvestilo " +
+                                "label label-info fade-in'>Podatki iz zunanjega vira se še niso posodobili. Počakajte trenutek in ponovno izberite 'Analiziraj življenjski slog'</span>");
+                            } else {
+                                $("#kreirajSporociloVnos").html("<span class='obvestilo " +
+                                "label label-info fade-in'>Za izbrano državo ni podatkov, zato izračun ni bil mogoč. Prosimo izberite drugo državo.</span>");
+                            }                           
                             return;
                         }
                             
@@ -737,7 +743,7 @@ function zdruziPodatke() {
                                 console.log("Your lifestyle is OK");
                             }
                             console.log("Spremenjena ZD glede na lifestyle: " + odbitekSplosen + " Years to go: " + toGo);
-                            console.log("Predlogi za izboljšanje življenskega stila");
+                            console.log("Predlogi za izboljšanje življenjskega stila");
                             
                             if(jeKadilec == 1) console.log("Prenehajte kaditi");
                             if(odbitekITM < 0) console.log("Vaša telesna teža je previsoka");
@@ -992,11 +998,13 @@ function preberiTlak(ehrId, callback){
 var tableData = [];
 var maleTest;
 var femaleTest;
+var tableParsed = false;
 
 $(document).ready(function() {
     //$('#country2').on('change', function() {
         parse($(this).val(), function(res) {
             if(res != null) console.log("Success!");
+           
         });
     //});
 });
@@ -1093,7 +1101,7 @@ function parse(){
 						console.log("Success, najdenih " + tableData.length + " vrstic.");      
 						$("#kreirajSporociloZunanjiVir").html("<span class='obvestilo " +
                         "label label-success fade-in'>Uspešno pridobljeni podatki iz zunanjega vira</span>");
-						
+						tableParsed = true;
 						
 						//console.log("Testni izpis" + tableData[13].country);
 						
@@ -1130,7 +1138,7 @@ function parse(){
 					}
 					results += "</table>";
 					$("#poljeZaIzpisTabele").val("");
-				    $("#poljeZaIzpisTabele").append(results);
+				    $("#poljeZaIzpisTabele").html("").append(results);
 	            }
 	            
 	        });
@@ -1147,8 +1155,8 @@ function parse(){
                           res[i].unit + "</td>";
 					}
 					results += "</table>";
-					$("#poljeZaIzpisTabele").val("");
-				    $("#poljeZaIzpisTabele").append(results);
+					
+				    $("#poljeZaIzpisTabele").html("").append(results);
 	            }    
 	        });
 	    } else if (value == 3) {
@@ -1166,33 +1174,33 @@ function parse(){
 	                
 	                if (tabelaITM.length > 0) {
 				    var results = "<table class='table table-striped " + "table-hover'><tr><th>Datum in ura</th>" +
-                        "<th class='text-right'>ITM</th></tr>";
+                        "<th class='text-center'>ITM</th>" + "<th class='text-right'>Opis</th></tr>";
                         
 					for (var i in tabelaITM) {
 					    var itm = tabelaITM[i];
 					    var izpis;
 					    if(itm < 18.5){
-					        izpis = "Podhranjenost";
+					        izpis = "<b><u>Podhranjenost</b></u>";
 					    } else if (itm < 24.9){
 					        izpis = "Normalna teža";
 					    } else if (itm < 29.9){
-					        izpis = "Prekomerna telesna teža";
+					        izpis = "<b><u>Prekomerna telesna teža</b></u>";
 					    } else if (itm < 34.9){
-					        izpis = "Debelost I. stopnje";
+					        izpis = "<b><u>Debelost I. stopnje</b></u>";
 					    } else if (itm < 39.9){
-					        izpis = "Debelost II. stopnje";
+					        izpis = "<b><u>Debelost II. stopnje</b></u>";
 					    } else {
-					        izpis = "Debelost III. stopnje";
+					        izpis = "<b><u>Debelost III. stopnje</b></u>";
 					    }
 					    
 					    
 						results += "<tr><td>" + tabelaTez[i].time +
-                          "</td><td class='text-right'>" + tabelaITM[i] + " <i>(" + izpis + ")</i></td>";
+                          "</td><td class='text-center'>" + tabelaITM[i] + "</td><td class='text-right'><i>" + izpis + "</i></td>";
 					}
 					
 					results += "</table>";
-					$("#poljeZaIzpisTabele").val("");
-				    $("#poljeZaIzpisTabele").append(results);
+					
+				    $("#poljeZaIzpisTabele").html("").append(results);
 	            }    
 	                
 	            })

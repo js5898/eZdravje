@@ -9,7 +9,7 @@
   </style>
   <script src="knjiznice/js/jquery-2.2.3.min.js"></script>
   <script src="knjiznice/js/bootstrap.min.js"></script>
-  <script src="knjiznice/js/koda.js"></script>
+  <!--<script src="knjiznice/js/koda.js"></script>-->
 </head>
 <body>
 
@@ -22,7 +22,7 @@
           <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
         </button>
         <!-- ZAČETEK: Ime vaše aplikacije -->
-        <a class="navbar-brand" href="index.html">{ime vaše aplikacije}</a>
+        <a class="navbar-brand" href="index.html">LifeExpectancy Analyser</a>
         <!-- KONEC: Ime vaše aplikacije -->
       </div>
       <div class="collapse navbar-collapse" id="menujska-vrstica">
@@ -45,7 +45,13 @@
           </div>
           <div class="panel-body">
             <!-- ZAČETEK: Opis ideje, ki jo aplikacija podpira -->
-            <p><strong>TO-DO</strong>: Na tem mestu je potrebno dodati <strong>osnovni opis ideje rešitve</strong> (kakšen je osnovni SCENARIJ UPORABE, KDO je ciljna publika, za kakšen NAMEN se aplikacija uporablja).</p><p class="text-muted">Opis naj ne bo daljši od 200 besed.</p>
+            <p style="text-align: left"><strong><u>Osnovni opis ideje:</u></strong> Aplikacija na podlagi meritev, pridobljenih preko uporabnikovega EHR IDja in ostalih parametrov, ki jih zajame, oceni pacientov življenjski slog.<br>
+            Na podlagi povprečne življenjske dobe v državi, kjer pacient živi in njegovega življenjskega sloga nato izračuna pričakovano življenjsko dobo in poda predloge za izboljšanje življenjskega sloga.<br><br>
+            <strong><u>Ciljna publika:</u></strong> Ciljna publika so uporabniki/pacienti, ki jih zanima, kako zdrav je njihov življenjski slog ali jih zanima, kakšna je njihova pričakovana življenjska doba glede na njihov življenjski slog.<br><br>
+            <strong><u>Scenarij uporabe:</u></strong> Uporabnik vnese svoj osebni EHR ID in nekatere podrobnosti svojega življenjskega sloga, nato izbere 'Analiziraj življenjski slog'. 
+            <br>Aplikacija izpiše oceno njegovega življenjskega sloga in predloge za izboljšanje in pričakovano življenjsko dobo.
+            Dodatno lahko uporabnik pregleda še nekatere svoje meritve oz. nihanje meritev skozi čas, kjer so posebej označene tiste, ki za uporabnika predstavljajo tveganje splošno zdravje.
+            </p>
             <!-- KONEC: Opis ideje, ki jo aplikacija podpira -->
           </div>
         </div>
@@ -55,7 +61,10 @@
           </div>
           <div class="panel-body">
             <!-- ZAČETEK: Uporabljeni zunanji viri podatkov -->
-            <p><strong>TO-DO</strong>: Na tem mestu je navesti zunanji vir podatkov (URL naslov), na kakšen način ste ga uporabili (neposredni API klic, uvožena statična datoteka ipd.) in kaj je bil namen uporabe (kako se vključuje v osnovno idejo aplikacije).</p>
+            <p style="text-align: left"><u><strong>Zunanji vir podatkov:</strong></u> Aplikacija kot zunanji vir podatkov uporablja tabelo iz Wikipedije – <a href="https://en.wikipedia.org/wiki/List_of_countries_by_life_expectancy" target="_blank">List of countries by life expectancy (WHO, 2015)</a>.<br><br>
+              <u><strong>Implementacija:</strong></u> Podatki se ob vsaki osvežitvi strani <i>index.html</i> avtomatsko pridobijo preko API klica in se začasno lokalno shranijo. <br>
+              Ob izbiri države iz menija aplikacija poišče izbrano državo v začasni lokalni kopiji tabele in pridobi pričakovano življenjsko dobo za moške oz. ženske v tej državi, ki jo nato uporabi kot podatek pri izračunu pričakovane življenjske dobe, saj je le-ta odvisna tudi od države prebivanja.
+            </p>
             <!-- KONEC: Uporabljeni zunanji viri podatkov -->
           </div>
         </div>
@@ -65,7 +74,8 @@
           </div>
           <div class="panel-body">
             <!-- ZAČETEK: Master/detail načrtovalski vzorec -->
-            <p><strong>TO-DO</strong>: Na tem mestu morate navesti uporabljen master/detail načrtovalski vzorec in na kakšen način ga nameravate uporabiti.</p>
+            <p style="text-align: left">Master/detail načrtovalski vzorec je uporabljen pri dodatni funkcionalnosti – analizi zgodovine meritev.<br>
+            Uporabnik iz menija izbere želen tip meritve, aplikacija pa izpiše tabelo vseh vnesenih meritev tega tipa in posebej označi tiste, ki predstavljajo tveganje za splošno zdravje.</p>
             <!-- KONEC: Master/detail načrtovalski vzorec -->
           </div>
         </div>
@@ -75,7 +85,7 @@
           </div>
           <div class="panel-body">
             <!-- ZAČETEK: Uporabljeni zunanji viri podatkov -->
-            <p><strong>TO-DO</strong>: Na tem mestu je potrebno navesti uporabljeno tehniko vizualizacije podatkov (za pomoč lahko uporabite primer iz <a href="https://github.com/mbostock/d3/wiki/Gallery" target="_blank">D3.js galerije</a>) in zakaj je bila ta tehnika izbrana.</p>
+            <p style="text-align: left">Za vizualizacijo je bila uporabljena knjižnica <a href="http://bl.ocks.org/brattonc/5e5ce9beee483220e2f6" target="_blank">D3 Liquid Fill Gauge</a>. Knjižnica je bila izbrana, ker omogoča nazorno predstavitev podatkov (pričakovana starost, sprememba življenjske dobe zaradi življenjskega sloga,…) in se tako dobro vključuje v kontekst same aplikacije.</p>
             <!-- KONEC: Uporabljeni zunanji viri podatkov -->
           </div>
         </div>
