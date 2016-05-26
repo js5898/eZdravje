@@ -267,7 +267,7 @@ function dodajMeritveVitalnihZnakovAuto(stPacienta){
     	    meritve1_2.telesnaTeza= "65";
     	    meritve1_2.telesnaTemperatura= "37";
     	    meritve1_2.sistolicniKrvniTlak= "125";
-    	    meritve1_2.diastolicniKrvniTlak= "110";
+    	    meritve1_2.diastolicniKrvniTlak= "90";
     	    meritve1_2.nasicenostKrviSKisikom= "98";
     	    vpisiMeritve(stPacienta, meritve1_2);
     	    
@@ -650,6 +650,9 @@ function zdruziPodatke() {
                             }                           
                             return;
                         }
+                         
+                        document.getElementById("analizirajZivSlog").disabled = true;
+                        document.getElementById("osveziStran").style.display = 'inline';
                             
                             //expDobaM = res4.maleLifeExpectancy;
                             //expDobaZ = res4.femaleLifeExpectancy;
@@ -1142,7 +1145,7 @@ function parse(){
 	            }
 	            
 	        });
-	    } else if (value == 2) {
+	    } else if (value == 2 && globalEhrId != null) {
 	        preberiVisino(globalEhrId, function(res){
 	            console.log("Visina.length: " + res.length);
 	        
@@ -1159,7 +1162,7 @@ function parse(){
 				    $("#poljeZaIzpisTabele").html("").append(results);
 	            }    
 	        });
-	    } else if (value == 3) {
+	    } else if (value == 3 && globalEhrId != null) {
 	        preberiTezo(globalEhrId, function(res){
 	            tabelaTez = res;
 	            
@@ -1205,5 +1208,32 @@ function parse(){
 	                
 	            })
 	        });
+	    } else if (value == 4 && globalEhrId != null){
+	        preberiTlak(globalEhrId, function(res4){
+	            if (res4.length > 0) {
+	                var izpis;
+	                
+				    var results = "<table class='table table-striped " + "table-hover'><tr><th>Datum in ura</th>" +
+                        "<th class='text-right'>Diastolični/sistolični</th></tr>";
+					for (var i in res4) {
+					    var sis = res4[i].systolic;
+					    var dia = res4[i].diastolic;
+					    
+					    if(dia < 95 && sis < 140){
+					        izpis = dia + "/" + sis;
+					    } else {
+					        izpis = "<b><u>" + dia + "/" + sis + "</b></u>";
+					    }
+					    
+						results += "<tr><td>" + res4[i].time +
+                          "</td><td class='text-right'>" + izpis + "</td>";
+					}
+					results += "</table>";
+					
+				    $("#poljeZaIzpisTabele").html("").append(results);
+	            }    
+	        });
+	    } else if (globalEhrId == null){
+	        $("#poljeZaIzpisTabele").html("").val("Napaka EHR IDja. Osvežite stran in poskusite znova.");
 	    }
 	}
