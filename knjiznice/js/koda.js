@@ -150,8 +150,8 @@ function vnesiIdIzMenija(meniPacientov){
                 $("#kadilec_da").prop('checked', false);
                 $("#kadilec_ne").prop('checked', true);
                 $("#tedenskaAktivnost").val("0");
-                $("#enoteAlkoTeden").val("11");
-                $("#country2").val("Zambia");
+                $("#enoteAlkoTeden").val("10");
+                $("#country2").val("Japan");
                 break;
                 
             case '3':
@@ -160,7 +160,7 @@ function vnesiIdIzMenija(meniPacientov){
                 $("#kadilec_ne").prop('checked', true);
                 $("#tedenskaAktivnost").val("12");
                 $("#enoteAlkoTeden").val("2");
-                $("#country2").val("Canada");
+                $("#country2").val("Zambia");
                 break;
         }
 }
@@ -290,7 +290,7 @@ function dodajMeritveVitalnihZnakovAuto(stPacienta){
             meritve2_1.ehrId = pacientiTab[stPacienta].ehrId;
 	        meritve2_1.datumInUra= "2011-04-22T12:55";
 	        meritve2_1.telesnaVisina= "155";
-    	    meritve2_1.telesnaTeza= "82";
+    	    meritve2_1.telesnaTeza= "92";
     	    meritve2_1.telesnaTemperatura= "34";
     	    meritve2_1.sistolicniKrvniTlak= "150";
     	    meritve2_1.diastolicniKrvniTlak= "90";
@@ -414,128 +414,6 @@ function izpisiIdje(){
     console.log("Tretji: " + pacientiTab[3].firstName + " " + pacientiTab[3].lastName + " " + pacientiTab[3].birthDate + " " + pacientiTab[3].ehrId);
 }
 
-
-// TODO - To delete --> Funkcija za GUI vnos meritev
-/*
-function kreirajEHRzaBolnika() {
-	sessionId = getSessionId();
-
-	var ime = $("#kreirajIme").val();
-	var priimek = $("#kreirajPriimek").val();
-	var datumRojstva = $("#kreirajDatumRojstva").val();
-	var spol = $('input[name=spol]:checked').val();                 // MALE/FEMALE so default ehrscape vrednosti
-	console.log("Spol: " + spol);
-
-	if (!ime || !priimek || !datumRojstva || ime.trim().length == 0 ||
-      priimek.trim().length == 0 || datumRojstva.trim().length == 0) {
-		$("#kreirajSporocilo").html("<span class='obvestilo label " +
-      "label-warning fade-in'>Prosim vnesite zahtevane podatke!</span>");
-	} else {
-		$.ajaxSetup({
-		    headers: {"Ehr-Session": sessionId}
-		});
-		$.ajax({
-		    url: baseUrl + "/ehr",
-		    type: 'POST',
-		    success: function (data) {
-		        var ehrId = data.ehrId;
-		        var partyData = {
-		            firstNames: ime,
-		            lastNames: priimek,
-		            gender: spol,
-		            dateOfBirth: datumRojstva,
-		            partyAdditionalInfo: [
-		                { key: "ehrId", value: ehrId }
-		            ]
-		            
-		        };
-		        $.ajax({
-		            url: baseUrl + "/demographics/party",
-		            type: 'POST',
-		            contentType: 'application/json',
-		            data: JSON.stringify(partyData),
-		            success: function (party) {
-		                if (party.action == 'CREATE') {
-		                    $("#kreirajSporocilo").html("<span class='obvestilo " +
-                          "label label-success fade-in'>Uspešno kreiran EHR '" +
-                          ehrId + "'.</span>");
-		                    $("#preberiEHRid").val(ehrId);
-		                }
-		            },
-		            error: function(err) {
-		            	$("#kreirajSporocilo").html("<span class='obvestilo label " +
-                    "label-danger fade-in'>Napaka '" +
-                    JSON.parse(err.responseText).userMessage + "'!");
-		            }
-		        });
-		    }
-		});
-	}
-}
-
-
-// TODO - To delete - funkcija za vnos meritev vitalnih znakov
-function dodajMeritveVitalnihZnakov() {
-	sessionId = getSessionId();
-
-	var ehrId = $("#dodajVitalnoEHR").val();
-	var datumInUra = $("#dodajVitalnoDatumInUra").val();
-	var telesnaVisina = $("#dodajVitalnoTelesnaVisina").val();
-	var telesnaTeza = $("#dodajVitalnoTelesnaTeza").val();
-	var telesnaTemperatura = $("#dodajVitalnoTelesnaTemperatura").val();
-	var sistolicniKrvniTlak = $("#dodajVitalnoKrvniTlakSistolicni").val();
-	var diastolicniKrvniTlak = $("#dodajVitalnoKrvniTlakDiastolicni").val();
-	var nasicenostKrviSKisikom = $("#dodajVitalnoNasicenostKrviSKisikom").val();
-	//var merilec = $("#dodajVitalnoMerilec").val();
-
-	if (!ehrId || ehrId.trim().length == 0) {
-		$("#dodajMeritveVitalnihZnakovSporocilo").html("<span class='obvestilo " +
-      "label label-warning fade-in'>Prosim vnesite zahtevane podatke!</span>");
-	} else {
-		$.ajaxSetup({
-		    headers: {"Ehr-Session": sessionId}
-		});
-		var podatki = {
-			// Struktura predloge je na voljo na naslednjem spletnem naslovu:
-      // https://rest.ehrscape.com/rest/v1/template/Vital%20Signs/example
-		    "ctx/language": "en",
-		    "ctx/territory": "SI",
-		    "ctx/time": datumInUra,
-		    "vital_signs/height_length/any_event/body_height_length": telesnaVisina,
-		    "vital_signs/body_weight/any_event/body_weight": telesnaTeza,
-		   	"vital_signs/body_temperature/any_event/temperature|magnitude": telesnaTemperatura,
-		    "vital_signs/body_temperature/any_event/temperature|unit": "°C",
-		    "vital_signs/blood_pressure/any_event/systolic": sistolicniKrvniTlak,
-		    "vital_signs/blood_pressure/any_event/diastolic": diastolicniKrvniTlak,
-		    "vital_signs/indirect_oximetry:0/spo2|numerator": nasicenostKrviSKisikom
-		};
-		var parametriZahteve = {
-		    ehrId: ehrId,
-		    templateId: 'Vital Signs',
-		    format: 'FLAT'
-		};
-		$.ajax({
-		    url: baseUrl + "/composition?" + $.param(parametriZahteve),
-		    type: 'POST',
-		    contentType: 'application/json',
-		    data: JSON.stringify(podatki),
-		    success: function (res) {
-		        $("#dodajMeritveVitalnihZnakovSporocilo").html(
-              "<span class='obvestilo label label-success fade-in'>" +
-              res.meta.href + ".</span>");
-		    },
-		    error: function(err) {
-		    	$("#dodajMeritveVitalnihZnakovSporocilo").html(
-            "<span class='obvestilo label label-danger fade-in'>Napaka '" +
-            JSON.parse(err.responseText).userMessage + "'!");
-		    }
-		});
-	}
-}
-*/
-// TODO - Konec funkcij za brisanje
-
-
 // Konstante za izracun expected lifestyla
 
 const kadilec = -10;             // Kajenje vec kot 30 let
@@ -597,6 +475,7 @@ function zdruziPodatke() {
     
     $("#kreirajSporociloVnos").html("<span class='obvestilo " +
       "label label-warning fade-in'></span>");
+    
     // Dobi EHR ID in osnovne podatke
     preberiEHRodBolnika(ehrId, function(data) {
         
@@ -606,198 +485,198 @@ function zdruziPodatke() {
             letoRojstva = data.party.dateOfBirth.substring(0,4);
             spol = data.party.gender;
         
-        // Vrne tabelo meritev teze
-        preberiTezo(ehrId, function(res){
-            teza = res;
-            var indeksZadnjeMeritve = (teza.length) - 1;
-            tezaZadnja = teza[indeksZadnjeMeritve].weight;
-            
-            // Vrne tabelo meritev visine    
-            preberiVisino(ehrId, function(res2){
-                visina = res2;
-                visinaZadnja = visina[indeksZadnjeMeritve].height;
+            // Vrne tabelo meritev teze
+            preberiTezo(ehrId, function(res){
+                teza = res;
+                var indeksZadnjeMeritve = (teza.length) - 1;
+                tezaZadnja = teza[indeksZadnjeMeritve].weight;
                 
-                // Vrne tabelo meritev tlaka        
-                preberiTlak(ehrId, function(res3){
-                        tlak = res3;
-                        tlakZadnjiSist = tlak[indeksZadnjeMeritve].systolic;
-                        tlakZadnjiDiast = tlak[indeksZadnjeMeritve].diastolic;
-                        //console.log("TezaZ: " + tezaZadnja + " VisinaZ: " + visinaZadnja + "Zadnji sist: "+tlakZadnjiSist + " Zadnji diast: " + tlakZadnjiDiast);
-                        
-                        
-                        // Nadaljevanje kode --> Parse podatkov iz wikipedije
-                        
-                       
-                        //najdiPodatkeDrzave(drzava);   //, function(res4){
-                        //console.log("Table data inside callback" + tableData[2].country);
-                        var match = false;
-                        for(var i in tableData){
-                            if(tableData[i].country == drzava){
-                                console.log("Succes - country found: " + tableData[i].country);
-                                expDobaM = tableData[i].maleLifeExpectancy;
-                                expDobaZ = tableData[i].femaleLifeExpectancy;
-                                match = true;
-                                break;
-                            }
-                        } 
-                        if(match == false){
-                            if(tableParsed == false){
-                                $("#kreirajSporociloVnos").html("<span class='obvestilo " +
-                                "label label-info fade-in'>Podatki iz zunanjega vira se še niso posodobili. Počakajte trenutek in ponovno izberite 'Analiziraj življenjski slog'</span>");
-                            } else {
-                                $("#kreirajSporociloVnos").html("<span class='obvestilo " +
-                                "label label-info fade-in'>Za izbrano državo ni podatkov, zato izračun ni bil mogoč. Prosimo izberite drugo državo.</span>");
-                            }                           
-                            return;
-                        }
-                         
-                        document.getElementById("analizirajZivSlog").disabled = true;
-                        document.getElementById("osveziStran").style.display = 'inline';
+                // Vrne tabelo meritev visine    
+                preberiVisino(ehrId, function(res2){
+                    visina = res2;
+                    visinaZadnja = visina[indeksZadnjeMeritve].height;
+                    
+                    // Vrne tabelo meritev tlaka        
+                    preberiTlak(ehrId, function(res3){
+                            tlak = res3;
+                            tlakZadnjiSist = tlak[indeksZadnjeMeritve].systolic;
+                            tlakZadnjiDiast = tlak[indeksZadnjeMeritve].diastolic;
+                            //console.log("TezaZ: " + tezaZadnja + " VisinaZ: " + visinaZadnja + "Zadnji sist: "+tlakZadnjiSist + " Zadnji diast: " + tlakZadnjiDiast);
                             
-                            //expDobaM = res4.maleLifeExpectancy;
-                            //expDobaZ = res4.femaleLifeExpectancy;
-                            //console.log("DobaM:" + expDobaM);    
-                            // Parse iz wikipedije END
                             
-                            // Izracun zivljenjske dobe
-                            var ITM = tezaZadnja/((visinaZadnja/100)*(visinaZadnja/100));
-                            var odbitekITM;
-                            if(ITM < 25){
-                                odbitekITM = 0;
-                            } else if (ITM < 30) {
-                                odbitekITM = overweight;
-                            } else if (ITM < 35) {
-                                odbitekITM = classIobesity;
-                            } else if (ITM < 40) {
-                                odbitekITM = classIIobesity
-                            } else {
-                                odbitekITM = classIIIobesity;
-                            }
+                            // Nadaljevanje kode --> Parse podatkov iz wikipedije
                             
-                            var odbitekAlkohol;
-                            if(spol == "MALE"){
-                                if(alkoholTeden < 10){
-                                    odbitekAlkohol = 0;
-                                } else if (alkoholTeden < 25){
-                                    odbitekAlkohol = alcoholPerUnitHazardous;
-                                } else {
-                                    odbitekAlkohol = alcoholPerUnitHarmful;
+                           
+                            //najdiPodatkeDrzave(drzava);   //, function(res4){
+                            //console.log("Table data inside callback" + tableData[2].country);
+                            var match = false;
+                            for(var i in tableData){
+                                if(tableData[i].country == drzava){
+                                    console.log("Succes - country found: " + tableData[i].country);
+                                    expDobaM = tableData[i].maleLifeExpectancy;
+                                    expDobaZ = tableData[i].femaleLifeExpectancy;
+                                    match = true;
+                                    break;
                                 }
-                            } else {
-                                if(alkoholTeden < 7){
-                                    odbitekAlkohol = 0;
-                                } else if (alkoholTeden < 18){
-                                    odbitekAlkohol = alcoholPerUnitHazardous;
+                            } 
+                            if(match == false){
+                                if(tableParsed == false){
+                                    $("#kreirajSporociloVnos").html("<span class='obvestilo " +
+                                    "label label-info fade-in'>Podatki iz zunanjega vira se še niso posodobili. Počakajte trenutek in ponovno izberite 'Analiziraj življenjski slog'</span>");
                                 } else {
-                                    odbitekAlkohol = alcoholPerUnitHarmful;
-                                }
+                                    $("#kreirajSporociloVnos").html("<span class='obvestilo " +
+                                    "label label-info fade-in'>Za izbrano državo ni podatkov, zato izračun ni bil mogoč. Prosimo izberite drugo državo.</span>");
+                                }                           
+                                return;
                             }
-                            
-                            var odbitekTlak = 0;
-                            if(tlakZadnjiSist > 160){
-                                odbitekTlak -= 2;
-                            } else if (tlakZadnjiSist > 140){
-                                odbitekTlak -= 1;
-                            }
-                            
-                            if(tlakZadnjiDiast > 100){
-                                odbitekTlak -= 2;
-                            } else if (tlakZadnjiDiast > 90){
-                                odbitekTlak -= 1;
-                            }
-                            
-                            var pribitekSport = (tedenskaAktivnost * uraSportaNaTeden);
-                            if(pribitekSport > 10){
-                                pribitekSport = 10;
-                            }
-                            
-                            //console.log("kadilec: " + jeKadilec*kadilec + " | oITM: " + odbitekITM + " | oAlk: " + odbitekAlkohol + " | oTlak: " + odbitekTlak + " | prSport " + pribitekSport);
-                            var odbitekSplosen;
-                            odbitekSplosen = (jeKadilec * kadilec) + (odbitekITM) + (odbitekAlkohol) + (odbitekTlak) + (pribitekSport);
-                            console.log(odbitekSplosen);
-                            
-                            var starost = 0;
-                            if(!isNaN(letoRojstva)){
-                                starost = leto - letoRojstva;
-                            }
-                            
-                            var expectedStarost = 0;
-                            if(spol == "MALE"){
-                                // TODO preberi iz tabele!
-                                expectedStarost = expDobaM;
-                                console.log("Pricakovana ZD(Moski): " + expDobaM)
-                            } else {
-                                expectedStarost = expDobaZ;
-                                console.log("Pricakovana ZD(Zenske): " + expDobaZ);
-                            }
-                            
-                            
-                            toGo = expectedStarost - starost + odbitekSplosen;
-                            //console.log("--> toGo " + toGo + " starost: " + starost);
-                            if(toGo < 1){
-                                toGo = 1;
-                            }
-                            
-                            if(odbitekSplosen < (-10)){
-                                console.log("Critical lifestyle - list predlogov");
-                            } else if (odbitekSplosen < -5){
-                                console.log("Consider changing lifestyle");
-                            } else if (odbitekSplosen < 0){
-                                console.log("Your lifestyle is OK");
-                            }
-                            console.log("Spremenjena ZD glede na lifestyle: " + odbitekSplosen + " Years to go: " + toGo);
-                            console.log("Predlogi za izboljšanje življenjskega stila");
-                            
-                            if(jeKadilec == 1) console.log("Prenehajte kaditi");
-                            if(odbitekITM < 0) console.log("Vaša telesna teža je previsoka");
-                            if(odbitekAlkohol < 0) console.log("Preveč pijete");
-                            if(odbitekTlak < 0) console.log("Previsok tlak - posvetujte se z zdravnikom");
-                            if(pribitekSport < 3) console.log("Premalo se ukvarjate s športom");
-                            
-                            
-                            // Kreira objekt za izpis na strani
-                            var izpis = {
-                                jeKadilec:jeKadilec,
-                                odbitekSplosen: odbitekSplosen,
-                                odbitekITM: odbitekITM,
-                                odbitekAlkohol: odbitekAlkohol,
-                                odbitekTlak: odbitekTlak,
-                                spol: spol,
-                                starost: starost,
-                                expDobaM: expDobaM,
-                                expDobaZ: expDobaZ,
-                                toGo: toGo
-                            };
-                            
-                            // Izpis na strani
-                            izpisRezultatov(izpis);
-                            
-                            // Kreira objekt za vizualizacijo
-                                // Modri krog - koliko bo zivljenjska doba s trenutnim zivljenjskim slogom
-                                    // Normalno = Expected - odbitekLifestyle
-                                    // Ce je Expected - odbitekLifestyle < starost --> Zivljenjska doba = starost+1
-                                    // Ce je starost > expected --> 
+                             
+                            document.getElementById("analizirajZivSlog").disabled = true;
+                            document.getElementById("osveziStran").style.display = 'inline';
                                 
-                            
-                            
-                            var vizData = {
-                                seOstaloZivljenja: toGo,
-                                odbitekLifestyle: Math.abs(odbitekSplosen),
-                                obSpremembi: function(){
-                                    if(spol == "MALE"){
-                                        return expDobaM;
+                                //expDobaM = res4.maleLifeExpectancy;
+                                //expDobaZ = res4.femaleLifeExpectancy;
+                                //console.log("DobaM:" + expDobaM);    
+                                // Parse iz wikipedije END
+                                
+                                // Izracun zivljenjske dobe
+                                var ITM = tezaZadnja/((visinaZadnja/100)*(visinaZadnja/100));
+                                var odbitekITM;
+                                if(ITM < 25){
+                                    odbitekITM = 0;
+                                } else if (ITM < 30) {
+                                    odbitekITM = overweight;
+                                } else if (ITM < 35) {
+                                    odbitekITM = classIobesity;
+                                } else if (ITM < 40) {
+                                    odbitekITM = classIIobesity
+                                } else {
+                                    odbitekITM = classIIIobesity;
+                                }
+                                
+                                var odbitekAlkohol;
+                                if(spol == "MALE"){
+                                    if(alkoholTeden < 10){
+                                        odbitekAlkohol = 0;
+                                    } else if (alkoholTeden < 25){
+                                        odbitekAlkohol = alcoholPerUnitHazardous;
                                     } else {
-                                        return expDobaZ;
+                                        odbitekAlkohol = alcoholPerUnitHarmful;
+                                    }
+                                } else {
+                                    if(alkoholTeden < 6){
+                                        odbitekAlkohol = 0;
+                                    } else if (alkoholTeden < 12){
+                                        odbitekAlkohol = alcoholPerUnitHazardous;
+                                    } else {
+                                        odbitekAlkohol = alcoholPerUnitHarmful;
                                     }
                                 }
-                            };
-                            
-                            // Vizualizacija
-                            vizualizacija(vizData);
-                       // });         // Konec parse callbacka
-                    })              // Konec preberi tlak callbacka
-                })                  // Konec preberi visino callbacka
-            });                      // Konec preberi tezo callbacka
+                                
+                                var odbitekTlak = 0;
+                                if(tlakZadnjiSist > 160){
+                                    odbitekTlak -= 2;
+                                } else if (tlakZadnjiSist > 140){
+                                    odbitekTlak -= 1;
+                                }
+                                
+                                if(tlakZadnjiDiast > 100){
+                                    odbitekTlak -= 2;
+                                } else if (tlakZadnjiDiast > 90){
+                                    odbitekTlak -= 1;
+                                }
+                                
+                                var pribitekSport = (tedenskaAktivnost * uraSportaNaTeden);
+                                if(pribitekSport > 10){
+                                    pribitekSport = 10;
+                                }
+                                
+                                //console.log("kadilec: " + jeKadilec*kadilec + " | oITM: " + odbitekITM + " | oAlk: " + odbitekAlkohol + " | oTlak: " + odbitekTlak + " | prSport " + pribitekSport);
+                                var odbitekSplosen;
+                                odbitekSplosen = (jeKadilec * kadilec) + (odbitekITM) + (odbitekAlkohol) + (odbitekTlak) + (pribitekSport);
+                                console.log(odbitekSplosen);
+                                
+                                // Ce zdravo zivi : odbitek +, sicer odbitek -
+                                
+                                var starost = 0;
+                                if(!isNaN(letoRojstva)){
+                                    starost = leto - letoRojstva;
+                                }
+                                
+                                var expectedStarost = 0;
+                                if(spol == "MALE"){
+                                    // TODO preberi iz tabele!
+                                    expectedStarost = expDobaM;
+                                    console.log("Pricakovana ZD(Moski): " + expDobaM)
+                                } else {
+                                    expectedStarost = expDobaZ;
+                                    console.log("Pricakovana ZD(Zenske): " + expDobaZ);
+                                }
+                                
+                                
+                                toGo = expectedStarost - starost + odbitekSplosen;          // Ce je ToGo
+                                //console.log("--> toGo " + toGo + " starost: " + starost);
+                                if(toGo < 1){
+                                    toGo = 1;
+                                }
+                                
+                                if(odbitekSplosen < (-10)){
+                                    console.log("Critical lifestyle - list predlogov");
+                                } else if (odbitekSplosen < -5){
+                                    console.log("Consider changing lifestyle");
+                                } else {
+                                    console.log("Your lifestyle is OK");
+                                }
+                                console.log("Spremenjena ZD glede na lifestyle: " + odbitekSplosen + " Years to go: " + toGo);
+                                console.log("Predlogi za izboljšanje življenjskega stila");
+                                
+                                if(jeKadilec == 1) console.log("Prenehajte kaditi");
+                                if(odbitekITM < 0) console.log("Vaša telesna teža je previsoka");
+                                if(odbitekAlkohol < 0) console.log("Preveč pijete");
+                                if(odbitekTlak < 0) console.log("Previsok tlak - posvetujte se z zdravnikom");
+                                if(pribitekSport < 3) console.log("Premalo se ukvarjate s športom");
+                                
+                                
+                                
+                                // Kreira objekt za izpis na strani
+                                var izpis = {
+                                    jeKadilec:jeKadilec,
+                                    odbitekSplosen: odbitekSplosen,
+                                    odbitekITM: odbitekITM,
+                                    odbitekAlkohol: odbitekAlkohol,
+                                    odbitekTlak: odbitekTlak,
+                                    spol: spol,
+                                    starost: starost,
+                                    expDobaM: expDobaM,
+                                    expDobaZ: expDobaZ,
+                                    toGo: toGo
+                                };
+                                
+                                // Izpis na strani
+                                izpisRezultatov(izpis);
+                                
+                                // Kreira objekt za vizualizacijo
+                                    // Modri krog - koliko bo zivljenjska doba s trenutnim zivljenjskim slogom
+                                        // Normalno = Expected - odbitekLifestyle
+                                        // Ce je Expected - odbitekLifestyle < starost --> Zivljenjska doba = starost+1
+                                        // Ce je starost > expected --> 
+                                    
+                                
+                                
+                                var vizData = {
+                                    prvi: starost + toGo,
+                                    drugi: function(){
+                                        if(odbitekSplosen < 0) return Math.abs(odbitekSplosen);
+                                        else return 0;
+                                    },
+                                    tretji: expectedStarost
+                                };
+                                
+                                // Vizualizacija
+                                vizualizacija(vizData);
+                           // });         // Konec parse callbacka
+                        })              // Konec preberi tlak callbacka
+                    })                  // Konec preberi visino callbacka
+                });                      // Konec preberi tezo callbacka
     
                         
         } else {
@@ -814,7 +693,7 @@ function zdruziPodatke() {
 // Izris krogov
 function vizualizacija(vizData) {
     // Modri krog
-  	var gauge1 = loadLiquidFillGauge("fillgauge1", (vizData.obSpremembi() - vizData.seOstaloZivljenja));
+  	var gauge1 = loadLiquidFillGauge("fillgauge1", vizData.prvi);
 	var config1 = liquidFillGaugeDefaultSettings();
     config1.circleColor = "#FF7777";
     config1.textColor = "#FF4444";
@@ -828,7 +707,7 @@ function vizualizacija(vizData) {
     
     // Rdeči krog
     console.log("Viz data - odb lifestyle: "+ vizData.odbitekLifestyle);
-    var gauge2= loadLiquidFillGauge("fillgauge2", vizData.odbitekLifestyle, config1);
+    var gauge2= loadLiquidFillGauge("fillgauge2", vizData.drugi(), config1);
     var config2 = liquidFillGaugeDefaultSettings();
     config2.circleColor = "#D4AB6A";
     config2.textColor = "#553300";
@@ -842,7 +721,7 @@ function vizualizacija(vizData) {
     config2.waveCount = 1;
     
     // Zeleni krog
-    var gauge3 = loadLiquidFillGauge("fillgauge3", vizData.obSpremembi(), config2);
+    var gauge3 = loadLiquidFillGauge("fillgauge3", vizData.tretji, config2);
 	var config3 = liquidFillGaugeDefaultSettings();
     config3.circleColor = "#33CC59";
     config3.textColor = "#FF4444";
@@ -864,7 +743,7 @@ function izpisRezultatov(rezultati){
         $("#splosnaOcena").html("je <strong><u>izjemno škodljiv</u> za vaše zdravje.</strong>");
     } else if (rezultati.odbitekSplosen < -5){
         $("#splosnaOcena").html("je <strong>mogoče še izboljšati.</strong>");
-    } else if (rezultati.odbitekSplosen > -4){
+    } else {
         $("#splosnaOcena").html("je <strong>zdrav.</strong>");
     }
                     
@@ -880,8 +759,13 @@ function izpisRezultatov(rezultati){
         $("#pricakovanaDoba").html("Pričakovana življenjska doba za ženske v vaši državi je <strong><u>" + rezultati.expDobaZ + "</u></strong> let.<br>");
     }
     $("#toGo").html("Ostalo vam je še <strong><u>" + rezultati.toGo + "</strong></u> let.<br>");
-    $("#deltaLifestyle").html("S <strong>spremembo življenjskega sloga</strong> lahko svojo življenjsko dobo podaljšate za <strong><u>" + (rezultati.odbitekSplosen * (-1)) + "</u></strong> let.<br>");
-
+    if(rezultati.spol == "MALE" && rezultati.starost > rezultati.expDobaM){
+        $("#deltaLifestyle").html("Vaša starost je <strong>višja od pričakovane življenjske dobe za moške v vaši državi.</strong><br>");
+    } else if (rezultati.spol == "FEMALE" && rezultati.starost > rezultati.expDobaZ) {
+        $("#deltaLifestyle").html("Vaša starost je <strong>višja od pričakovane življenjske dobe za ženske v vaši državi.</strong><br>");
+    } else if(rezultati.odbitekSplosen < 0){
+        $("#deltaLifestyle").html("<strong>Nezdrav življenjski slog</strong> je vašo pričakovano življenjsko dobo <strong> znižal</strong> za <strong><u>" + Math.abs(rezultati.odbitekSplosen) + "</u></strong> let.<br>");
+    }
 }
 
 // Dobi EHRid, vrne osnovne podatke o bolniku
@@ -1005,10 +889,7 @@ var tableParsed = false;
 
 $(document).ready(function() {
     //$('#country2').on('change', function() {
-        parse($(this).val(), function(res) {
-            if(res != null) console.log("Success!");
-           
-        });
+        parse();
     //});
 });
 
@@ -1065,7 +946,7 @@ function parse(){
 						var table = body.getElementsByTagName("table")[0]; // Najdi prvo tablo na strani
 						if (!table){
 							alert("Na strani ni tabele");
-							return;
+					        return;
 						}
 					
 						var tableLines = doc.evaluate('tbody/tr', table, null, XPathResult.ANYTYPE, null); // XPath
@@ -1106,18 +987,100 @@ function parse(){
                         "label label-success fade-in'>Uspešno pridobljeni podatki iz zunanjega vira</span>");
 						tableParsed = true;
 						
+						//parseError();
 						//console.log("Testni izpis" + tableData[13].country);
 						
 						
 					    //var testnaDrzava = "Canada";
 					},
 					
-					error: function() { 
-					    alert('Loading requested page failed!'); 
+					error: function() {
+					    $("#kreirajSporociloError").html("<span class='obvestilo label " +
+                        "label-warning fade-in'>Napaka strežnika pri pridobivanju podatkov (Napaka 5xx). Uporabljene so povprečne vrednosti za pričakovano starost.</span>");
+                        
+					    //alert('Loading requested page failed!'); 
 					    //callback(null);
 					}
 			});
+}
+
+/*
+// Dodano, se ne dela
+function parseError(){
+    //var myVar = '';
+    //    $.get('drzave.html', function(data) {
+    //     myVar = data;
+    //});
+    
+	console.log("ParseError se izvede");					
+	var parser = new DOMParser(); // string v DOMParser da pobere podatke
+	var doc = parser.parseFromString('drzave.html', "text/html");  // DOM kreiran
+	if (!doc){
+		alert("Napaka HTML fila");
+		return;
 	}
+	
+	var body = doc.body;
+	if (!body){
+		alert("Stran brez bodyja");
+		return;
+	}
+	
+	var table = body.getElementsByTagName("table")[0]; // Najdi prvo tablo na strani
+	if (!table){
+		alert("Na strani ni tabele");
+		return;
+	}
+
+	var tableLines = doc.evaluate('tbody/tr', table, null, XPathResult.ANYTYPE, null); // XPath
+	if (tableLines.resultType != XPathResult.UNORDERED_NODE_ITERATOR_TYPE){
+		alert("Tabela nima vrstic");
+		return;
+	}
+	
+	//var tableData = [];     // tabela za objekte 
+	var tableRow;
+	while ( tableRow = tableLines.iterateNext()){
+		if (!tableRow) // zadnja vrstica - success!
+			break; 
+		
+		
+		if (tableRow.cells.length != 7) 
+			continue;
+		
+		if (tableRow.cells[0].innerText == "Country")  // izpusti header tabele - ce je prvo polje Country, potem je to header...
+			continue;
+		
+		var obj = { 												
+			country : tableRow.cells[0].innerText.trim(),           // ?na zacetku vedno presledek
+			overallRank : tableRow.cells[1].innerText,
+			overallLifeExpectancy : tableRow.cells[2].innerText,
+			femaleRank : tableRow.cells[3].innerText,
+			femaleLifeExpectancy : tableRow.cells[4].innerText,
+			maleRank : tableRow.cells[5].innerText,
+			maleLifeExpectancy : tableRow.cells[6].innerText,
+		};
+		
+		tableData.push(obj); // dodaj objekt v array
+	}
+	
+	console.log(tableData);
+	console.log("Success, najdenih " + tableData.length + " vrstic.");      
+	$("#kreirajSporociloZunanjiVir").html("<span class='obvestilo " +
+    "label label-success fade-in'>Uspešno pridobljeni podatki iz zunanjega vira</span>");
+	tableParsed = true;
+	
+	//console.log("Testni izpis" + tableData[13].country);
+	
+	
+    //var testnaDrzava = "Canada";
+}
+*/
+
+
+
+
+
 	
 	// 1=teza, 2=visina, 3=ITM
 	function izpisiTabeloMeritev(){
