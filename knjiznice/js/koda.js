@@ -487,18 +487,38 @@ function zdruziPodatke() {
         
             // Vrne tabelo meritev teze
             preberiTezo(ehrId, function(res){
+                if(res == null){
+                    	$("#kreirajSporociloVnos").html("<span class='obvestilo " +
+                        "label label-warning fade-in'>Za izbranega pacienta ni dostopnih podatkov meritev, zato izračun ni mogoč.</span>");
+                        return;
+                }
+                    
                 teza = res;
                 var indeksZadnjeMeritve = (teza.length) - 1;
                 tezaZadnja = teza[indeksZadnjeMeritve].weight;
                 
                 // Vrne tabelo meritev visine    
                 preberiVisino(ehrId, function(res2){
+                    if(res2 == null){
+                    	$("#kreirajSporociloVnos").html("<span class='obvestilo " +
+                        "label label-warning fade-in'>Za izbranega pacienta ni dostopnih podatkov meritev, zato izračun ni mogoč.</span>");
+                        return;
+                    }
+                    
                     visina = res2;
+                    indeksZadnjeMeritve = (visina.length) - 1;
                     visinaZadnja = visina[indeksZadnjeMeritve].height;
                     
                     // Vrne tabelo meritev tlaka        
                     preberiTlak(ehrId, function(res3){
+                        if(res3 == null){
+                        	$("#kreirajSporociloVnos").html("<span class='obvestilo " +
+                            "label label-warning fade-in'>Za izbranega pacienta ni dostopnih podatkov meritev, zato izračun ni mogoč.</span>");
+                            return;
+                        }   
+                        
                             tlak = res3;
+                            indeksZadnjeMeritve = (tlak.length) - 1;
                             tlakZadnjiSist = tlak[indeksZadnjeMeritve].systolic;
                             tlakZadnjiDiast = tlak[indeksZadnjeMeritve].diastolic;
                             //console.log("TezaZ: " + tezaZadnja + " VisinaZ: " + visinaZadnja + "Zadnji sist: "+tlakZadnjiSist + " Zadnji diast: " + tlakZadnjiDiast);
@@ -509,6 +529,8 @@ function zdruziPodatke() {
                            
                             //najdiPodatkeDrzave(drzava);   //, function(res4){
                             //console.log("Table data inside callback" + tableData[2].country);
+                            
+                        if(tableParsed != "err"){    
                             var match = false;
                             for(var i in tableData){
                                 if(tableData[i].country == drzava){
@@ -529,7 +551,10 @@ function zdruziPodatke() {
                                 }                           
                                 return;
                             }
-                             
+                        } else {
+                            expDobaM = 73;
+                            expDobaZ = 76;
+                        }
                             document.getElementById("analizirajZivSlog").disabled = true;
                             document.getElementById("osveziStran").style.display = 'inline';
                                 
@@ -537,6 +562,20 @@ function zdruziPodatke() {
                                 //expDobaZ = res4.femaleLifeExpectancy;
                                 //console.log("DobaM:" + expDobaM);    
                                 // Parse iz wikipedije END
+                                if(spol == "MALE" || spol == "FEMALE"){
+                                   console.log("Spol izbran");
+                                } else {
+                                    if($('input[name=spol]:checked').val() == 0){
+                                        spol = "MALE";
+                                    } else if($('input[name=spol]:checked').val() == 1){
+                                        spol = "FEMALE";
+                                    } else {
+                                        spol = "MALE";
+                                        $("#kreirajSporociloVnos").html("<span class='obvestilo " +
+                                        "label label-warning fade-in'>Za pacienta ni podatkov o spolu - avtomatsko je bil izbran moški spol.</span>");
+                                    }
+                                    
+                                }
                                 
                                 // Izracun zivljenjske dobe
                                 var ITM = tezaZadnja/((visinaZadnja/100)*(visinaZadnja/100));
@@ -747,7 +786,7 @@ function izpisRezultatov(rezultati){
         $("#splosnaOcena").html("je <strong>zdrav.</strong>");
     }
                     
-    if(rezultati.odbitekAlkohol < 0) $("#alkohol").html("<strong>Zmanjšajte tedenski vnos alkohola. </strong>(<a href='http://www.nalijem.si/o-alkoholu/meje'>Meje za malo tvegano pitje</a>)<br>");
+    if(rezultati.odbitekAlkohol < 0) $("#alkohol").html("<strong>Zmanjšajte tedenski vnos alkohola. </strong>(<a href='http://www.nalijem.si/o-alkoholu/meje' target='_blank'>Meje za malo tvegano pitje</a>)<br>");
     if(rezultati.odbitekITM < 0) $("#ITM").html("Vaša telesna teža je <strong>previsoka.</strong> Razmislite o spremembi prehrane.<br>");
     if(rezultati.odbitekTlak < 0) $("#tlak").html("Vaš krvni tlak je <strong>previsok.</strong> Posvetujte se z zdravnikom.<br>");
     if(rezultati.pribitekSport < 3) $("#sport").html("Tedensko se <strong>premalo</strong> ukvarjate s športom.<br>");
@@ -893,6 +932,7 @@ $(document).ready(function() {
     //});
 });
 
+/*
 function najdiPodatkeDrzave(drzava){
     var res = {
 		maleLifeExpectancy: null,
@@ -911,7 +951,7 @@ function najdiPodatkeDrzave(drzava){
 	}
 	//callback(null);
 }
-
+*/
 
 // Funkcija za pridobivanje podatkov iz tabele
 //function parse(drzava, callback){
@@ -997,7 +1037,7 @@ function parse(){
 					error: function() {
 					    $("#kreirajSporociloError").html("<span class='obvestilo label " +
                         "label-warning fade-in'>Napaka strežnika pri pridobivanju podatkov (Napaka 5xx). Uporabljene so povprečne vrednosti za pričakovano starost.</span>");
-                        
+                        tableParsed = "err";
 					    //alert('Loading requested page failed!'); 
 					    //callback(null);
 					}
