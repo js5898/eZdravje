@@ -61,7 +61,9 @@
           </div>
           <div class="panel-body">
             <!-- ZAČETEK: Uporabljeni zunanji viri podatkov -->
-            <p style="text-align: left"><u><strong>Zunanji vir podatkov:</strong></u> Aplikacija kot zunanji vir podatkov uporablja tabelo iz Wikipedije – <a href="https://en.wikipedia.org/wiki/List_of_countries_by_life_expectancy" target="_blank">List of countries by life expectancy (WHO, 2015)</a>.<br><br>
+            <p style="text-align: left"><u><strong>Zunanji vir podatkov:</strong></u> Aplikacija kot zunanji vir podatkov uporablja tabelo iz Wikipedije – <a href="https://en.wikipedia.org/wiki/List_of_countries_by_life_expectancy" target="_blank">List of countries by life expectancy (WHO, 2015)</a>.
+            <br>Za določanje konstant pri izračunu življenjske dobe so bili uporablejeni še podatki iz naslednjih virov: <a href="http://www.cdc.gov/tobacco/data_statistics/fact_sheets/health_effects/tobacco_related_mortality/" target="_blank">Kajenje</a>, <a href="http://www.news-medical.net/news/2005/06/29/11410.aspx" target="_blank">krvni tlak</a>, 
+                <a href="https://www.nih.gov/news-events/news-releases/nih-study-finds-extreme-obesity-may-shorten-life-expectancy-14-years" target="_blank">telesna teža</a>, <a href="http://www.searidgealcoholrehab.com/alcoholism-health-effects.php" target="_blank">alkohol</a>.<br><br>
               <u><strong>Implementacija:</strong></u> Podatki se ob vsaki osvežitvi strani <i>index.html</i> avtomatsko pridobijo preko API klica in se začasno lokalno shranijo. <br>
               Ob izbiri države iz menija aplikacija poišče izbrano državo v začasni lokalni kopiji tabele in pridobi pričakovano življenjsko dobo za moške oz. ženske v tej državi, ki jo nato uporabi kot podatek pri izračunu pričakovane življenjske dobe, saj je le-ta odvisna tudi od države prebivanja.
             </p>

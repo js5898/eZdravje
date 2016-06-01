@@ -90,7 +90,7 @@
 						</div>
 					</div>
 					<div class="panel-body">
-					  <span class="input-group-addon">EHR ID</span><input id="dodajVitalnoEHRtretjiKorak" type="text" class="form-control input-mini" placeholder="7b661e12-3a98-21ad-c29e-2dc9f5a3d885">
+					  <span class="input-group-addon">EHR ID</span><input id="dodajVitalnoEHR" type="text" class="form-control input-mini" placeholder="7b661e12-3a98-21ad-c29e-2dc9f5a3d885">
 						<span class="input-group-addon">Kadilec</span><input id="kadilec_ne" type="radio" name="kadilec" value="0" checked> Ne <input id="kadilec_da" type="radio" name="kadilec" value="1"> Da <br>
 						<span class="input-group-addon"><i>Spol (Izpolniti le, če ni že izbran v EHR pacienta)</i></span><input id="spolM" type="radio" name="spol" value="0"> Moški <input id="spolZ" type="radio" name="spol" value="1"> Ženski <br>
 						<span class="input-group-addon">Telesna aktivnost (ur/teden)</span></span><input id="tedenskaAktivnost" type="text" class="form-control input-mini" placeholder="0">
@@ -100,7 +100,7 @@
               populateCountries("country2");
             </script>
             <span id="kreirajSporociloVnos" style="text-align: left"></span><span id="kreirajSporociloVnos" style="text-align: left"></span><br>
-						<button id="analizirajZivSlog"type="button" class="btn btn-success btn-l" style="margin-top: 15px" onclick="zdruziPodatke()">Analiziraj življenjski slog</button>
+						<button id="analizirajZivSlog"type="button" class="btn btn-success btn-l" style="margin-top: 15px" onclick="analizirajZivSlog()">Analiziraj življenjski slog</button>
 						<button id="osveziStran" type="button" class="btn btn-primary btn-l" style="display: none; margin-top: 15px;" onclick="location.reload()">Nov izračun</button>
 						<script>function reload(){window.location.reload;}</script>
 						<span id="kreirajSporocilo"></span>
