@@ -429,6 +429,9 @@ var globalEhrId = null;
     
 function analizirajZivSlog() {
     
+    $("#izpisiMeritve").val($("#izpisiMeritve option:first").val());
+    $('#poljeZaIzpisTabele').html('<i>Iz menija na desni izberite merive, ki jih želite izpisati</i>');
+    
     var ehrId = $("#dodajVitalnoEHR").val();
     var jeKadilec = $('input[name=kadilec]:checked').val();             // Returns 0/1
     var tedenskaAktivnost = $("#tedenskaAktivnost").val();
@@ -539,8 +542,9 @@ function analizirajZivSlog() {
                             expDobaZ = 76;
                         }
                         
-                            document.getElementById("analizirajZivSlog").disabled = true;
-                            document.getElementById("osveziStran").style.display = 'inline';
+                            $('#pregledPacient').html('Pregled <b>življenjskega sloga </b>za <strong><u>' + ime + " " + priimek + "</strong></u>");
+                           // document.getElementById("pregledPacient").value("Pregled <b>življenjskega sloga </b>in <strong>rezultati.</strong>");
+                            //document.getElementById("osveziStran").style.display = 'inline';
                                 
                                 //expDobaM = res4.maleLifeExpectancy;
                                 //expDobaZ = res4.femaleLifeExpectancy;
@@ -684,6 +688,9 @@ function analizirajZivSlog() {
                                 };
                                 
                                 // Vizualizacija
+                                $('#fillgauge1').html('');
+                                $('#fillgauge2').html('');
+                                $('#fillgauge3').html('');
                                 vizualizacija(vizData);
                                 
                         })              // Konec preberi tlak callbacka
@@ -706,6 +713,7 @@ function analizirajZivSlog() {
 function vizualizacija(vizData) {
     // Modri krog
   	var gauge1 = loadLiquidFillGauge("fillgauge1", vizData.prvi);
+	
 	var config1 = liquidFillGaugeDefaultSettings();
     config1.circleColor = "#FF7777";
     config1.textColor = "#FF4444";
@@ -715,11 +723,10 @@ function vizualizacija(vizData) {
     config1.textVertPosition = 0.2;
     config1.waveAnimateTime = 1000;
     config1.displayPercent = false;
-    
-    
     // Rdeči krog
     console.log("Viz data - odb lifestyle: "+ vizData.odbitekLifestyle);
     var gauge2= loadLiquidFillGauge("fillgauge2", vizData.drugi(), config1);
+    
     var config2 = liquidFillGaugeDefaultSettings();
     config2.circleColor = "#D4AB6A";
     config2.textColor = "#553300";
@@ -976,6 +983,7 @@ function parse(){
                         "label label-success fade-in'>Uspešno pridobljeni podatki iz zunanjega vira</span>");
 						tableParsed = true;
 						
+						
 						//parseError();
 						//console.log("Testni izpis" + tableData[13].country);
 						
@@ -985,8 +993,9 @@ function parse(){
 					
 					error: function() {
 					    $("#kreirajSporociloError").html("<span class='obvestilo label " +
-                        "label-warning fade-in'>Napaka strežnika pri pridobivanju podatkov (Napaka 5xx). Uporabljene so povprečne vrednosti za pričakovano starost.</span>");
+                        "label-warning fade-in'>Napaka strežnika pri pridobivanju podatkov (Napaka 5xx). Uporabljena bo lokalna kopija podatkovnega vira.</span>");
                         tableParsed = "err";
+                        parseError();
 					    //alert('Loading requested page failed!'); 
 					    //callback(null);
 					}
@@ -994,9 +1003,80 @@ function parse(){
 }
 
 
+// Dodano, se ne dela
+function parseError(){
+    
+    //var myVar = '';
+    $.get('drzave.html', function(data) {					
+    	var parser = new DOMParser(); // string v DOMParser da pobere podatke
+    	var doc = parser.parseFromString(data, "text/html");  // DOM kreiran
+    	if (!doc){
+    		alert("Napaka HTML fila");
+    		return;
+    	}
+    	
+    	var body = doc.body;
+    	if (!body){
+    		alert("Stran brez bodyja");
+    		return;
+    	}
+    	
+    	var table = body.getElementsByTagName("table")[0]; // Najdi prvo tablo na strani
+    	if (!table){
+    		alert("Na strani ni tabele");
+    		return;
+    	}
+    	var tableLines = doc.evaluate('tbody/tr', table, null, XPathResult.ANYTYPE, null); // XPath
+    	if (tableLines.resultType != XPathResult.UNORDERED_NODE_ITERATOR_TYPE){
+    		alert("Tabela nima vrstic");
+    		return;
+    	}
+    	
+    	//var tableData = [];     // tabela za objekte 
+    	var tableRow;
+    	while ( tableRow = tableLines.iterateNext()){
+    		if (!tableRow) // zadnja vrstica - success!
+    			break; 
+    		
+    		
+    		if (tableRow.cells.length != 7) 
+    			continue;
+    		
+    		if (tableRow.cells[0].innerText == "Country")  // izpusti header tabele - ce je prvo polje Country, potem je to header...
+    			continue;
+    		
+    		var obj = { 												
+    			country : tableRow.cells[0].innerText.trim(),           // ?na zacetku vedno presledek
+    			overallRank : tableRow.cells[1].innerText,
+    			overallLifeExpectancy : tableRow.cells[2].innerText,
+    			femaleRank : tableRow.cells[3].innerText,
+    			femaleLifeExpectancy : tableRow.cells[4].innerText,
+    			maleRank : tableRow.cells[5].innerText,
+    			maleLifeExpectancy : tableRow.cells[6].innerText,
+    		};
+    		
+    		tableData.push(obj); // dodaj objekt v array
+    	}
+    	
+    	//console.log(tableData);
+    	console.log("Success, najdenih " + tableData.length + " vrstic.");      
+    	$("#kreirajSporociloZunanjiVir").html("<span class='obvestilo " +
+        "label label-success fade-in'>Uspešno pridobljeni podatki iz lokalne kopije podatkovnega vira</span>");
+    	tableParsed = true;
+    });
+	
+	//console.log("Testni izpis" + tableData[13].country);
+	
+	
+    //var testnaDrzava = "Canada";
+}
+
+
 	// 1=teza, 2=visina, 3=ITM, 4 = tlak
 	    // Dodatna master-detail funkcionalnost
 function izpisiTabeloMeritev(){
+    
+    
     var value = $("#izpisiMeritve").val().trim();
     console.log("Value iz tabele meritev: " + value);
     var tabelaTez;
@@ -1112,3 +1192,5 @@ function izpisiTabeloMeritev(){
         $("#poljeZaIzpisTabele").html("").val("Napaka EHR IDja. Osvežite stran in poskusite znova.");
     }
 }
+
+
