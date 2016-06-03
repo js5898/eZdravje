@@ -993,7 +993,7 @@ function parse(){
 					
 					error: function() {
 					    $("#kreirajSporociloError").html("<span class='obvestilo label " +
-                        "label-warning fade-in'>Napaka strežnika pri pridobivanju podatkov (Napaka 5xx). Uporabljena bo lokalna kopija podatkovnega vira.</span>");
+                        "label-success fade-in'>Napaka strežnika pri pridobivanju podatkov (Napaka 5xx). Uporabljena bo lokalna kopija podatkovnega vira.</span>");
                         tableParsed = "err";
                         parseError();
 					    //alert('Loading requested page failed!'); 

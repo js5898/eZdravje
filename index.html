@@ -30,7 +30,7 @@
           <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
         </button>
         <!-- ZAČETEK: Ime vaše aplikacije -->
-        <a class="navbar-brand" href="index.html">LifeExpectancy Analyzer</a>
+        <a class="navbar-brand" href="index.html">Life Expectancy Analyser</a>
         <!-- KONEC: Ime vaše aplikacije -->
       </div>
       <div class="collapse navbar-collapse" id="menujska-vrstica">
@@ -57,31 +57,8 @@
         <span id="kreirajSporocilo3" style="text-align: left"></span>
         <span id="kreirajSporociloError" style="text-align: left"></span><br><br>
         <img src="knjiznice/other/Logo1.png" alt="Logo" style="width:305px;height:175px;"><br><br>
-        <!--
-        <div class="col-lg-6 col-md-6 col-sm-6">
-          <p class="lead" style="text-align: left"><strong>1. KORAK</strong>: EHR ID</p>
-				<div class="panel panel-primary">
-					<div class="panel-heading">
-						<div class="row">
-							<div class="col-lg-8 col-md-8 col-sm-8"><b>Pridobite svoj osebni EHR ID</b><br>(Če EHD ID že imate, preskočite ta korak)</div>
-							<div class="col-lg-4 col-md-4 col-sm-4"><select class="form-control input-sm" id="preberiPredlogoBolnika"><option value=""></option><option value="Pujsa,Pepa,1938-10-30T14:58">Pujsa Pepa</option></select></div>
-						</div>
-					</div>
-					<div class="panel-body">
-						<span class="input-group-addon">Ime</span><input id="kreirajIme" type="text" class="form-control input-mini" placeholder="Janez">
-						<span class="input-group-addon">Priimek</span><input id="kreirajPriimek" type="text" class="form-control" placeholder="Novak">
-						<span class="input-group-addon">Datum rojstva (YYYY-MM-ddThh:mm)</span><input id="kreirajDatumRojstva" type="text" class="form-control" placeholder="1970-03-10T12:30">
-						<span class="input-group-addon">Spol</span><input id="spol" type="radio" name="spol" value="MALE" checked> Moški</input> <input id="spol" type="radio" name="spol" value="FEMALE"> Ženski </input><br>
-						<button type="button" class="btn btn-primary btn-l" style="margin-top: 15px" onclick="kreirajEHRzaBolnika()">Pridobi EHR ID</button><span id="kreirajSporocilo"></span>
-						<button type="button" class="btn btn-primary btn-l" style="margin-top: 15px" onclick="izpisiIdje()">izpisi log</button>
-				  	</div>
-				</div>
-				-->
-				 <!-- DODATEK END - Kreiraj EHR zapis za pacienta -->
-				 
-				 <!-- DODATEK START - Kajenje/Gibanje -->
-				 <!-- <div class="col-lg-6 col-md-6 col-sm-6"> -->
-				 <p class="lead" style="text-align: left">Vnesite<strong> ostale zdravstvene podrobnosti </strong>pacienta</p>
+        
+				 <p class="lead" style="text-align: left">Vnesite<strong> zdravstvene podrobnosti </strong>pacienta</p>
 				<div class="panel panel-primary">
 					<div class="panel-heading">
 						<div class="row">
@@ -91,11 +68,11 @@
 					</div>
 					<div class="panel-body">
 					  <span class="input-group-addon">EHR ID</span><input id="dodajVitalnoEHR" type="text" class="form-control input-mini" placeholder="7b661e12-3a98-21ad-c29e-2dc9f5a3d885">
-						<span class="input-group-addon">Kadilec</span><input id="kadilec_ne" type="radio" name="kadilec" value="0" checked> Ne <input id="kadilec_da" type="radio" name="kadilec" value="1"> Da <br>
+						<span class="input-group-addon">Kadilec*</span><input id="kadilec_ne" type="radio" name="kadilec" value="0" checked> Ne <input id="kadilec_da" type="radio" name="kadilec" value="1"> Da <br>
 						<span class="input-group-addon"><i>Spol (Izpolniti le, če ni že izbran v EHR pacienta)</i></span><input id="spolM" type="radio" name="spol" value="0"> Moški <input id="spolZ" type="radio" name="spol" value="1"> Ženski <br>
-						<span class="input-group-addon">Telesna aktivnost (ur/teden)</span></span><input id="tedenskaAktivnost" type="text" class="form-control input-mini" placeholder="0">
-						<span class="input-group-addon">Enote alkohola na teden (2.5dl piva / 1dl vina / 0.3dl žganja = 1 enota)</span><input id="enoteAlkoTeden" type="text" class="form-control input-mini" placeholder="0">
-						<span class="input-group-addon">Država</span><select id="country2" name ="country2" class="form-control input-sm"></select>
+						<span class="input-group-addon">Telesna aktivnost (ur/teden)*</span></span><input id="tedenskaAktivnost" type="text" class="form-control input-mini" placeholder="0">
+						<span class="input-group-addon">Enote alkohola na teden (2.5dl piva / 1dl vina / 0.3dl žganja = 1 enota)*</span><input id="enoteAlkoTeden" type="text" class="form-control input-mini" placeholder="0">
+						<span class="input-group-addon">Država*</span><select id="country2" name ="country2" class="form-control input-sm"></select>
             <script language="javascript">
               populateCountries("country2");
             </script>
@@ -106,36 +83,7 @@
 						<span id="kreirajSporocilo"></span>
 				  	</div>
 				</div>
-			<!--</div> -->
-       <!-- DODATEK END - Kajenje/Gibanje --> 
-        
-        
-        <!-- DODATEK START - Vnos meritve vitalnih znakov -->
-        <!--
-        <p class="lead" style="text-align: left"><strong>2. KORAK</strong>: Vitalni znaki</p>
-        <div class="col-lg-6 col-md-6 col-sm-6">
-				<div class="panel panel-primary">
-					<div class="panel-heading">
-						<div class="row">
-							<div class="col-lg-8 col-md-8 col-sm-8">Vnesite <b>meritve svojih vitalnih znakov</b><br>(Meritve, označene z * so obvezne)</div>
-							<div class="col-lg-4 col-md-4 col-sm-4"><select class="form-control input-sm" id="preberiObstojeciVitalniZnak"><option value=""></option><option value="b931580f-2b05-488b-985b-8d9ffb08ad02|2014-11-21T11:40Z|185|80.0|36.50|118|92|98|medicinska sestra Smrketa">Ata Smrk</option></select></div>
-						</div>
-					</div>
-					<div class="panel-body">
-						<div class="input-group"><span class="input-group-addon">EHR ID*</span><input id="dodajVitalnoEHR" type="text" class="form-control input-mini" placeholder="7b661e12-3a98-21ad-c29e-2dc9f5a3d885"></div>
-						<div class="input-group"><span class="input-group-addon">Datum in ura</span><input id="dodajVitalnoDatumInUra" type="text" class="form-control input-mini" placeholder="2014-11-21T11:40Z"></div>
-						<div class="input-group"><span class="input-group-addon">Telesna višina*</span><input id="dodajVitalnoTelesnaVisina" type="text" class="form-control input-mini" placeholder="185"><span class="input-group-addon">cm</span></div>
-						<div class="input-group"><span class="input-group-addon">Telesna teža*</span><input id="dodajVitalnoTelesnaTeza" type="text" class="form-control input-mini" placeholder="80.00"><span class="input-group-addon">kg</span></div>
-						<div class="input-group"><span class="input-group-addon">Telesna temperatura </span><input id="dodajVitalnoTelesnaTemperatura" type="text" class="form-control input-mini" placeholder="36.50"><span class="input-group-addon">°C</span></div>
-						<div class="input-group"><span class="input-group-addon">Sistolični krvni tlak*</span><input id="dodajVitalnoKrvniTlakSistolicni" type="text" class="form-control input-mini" placeholder="118"><span class="input-group-addon">mm Hg</span></div>
-						<div class="input-group"><span class="input-group-addon">Diastolični krvni tlak*</span><input id="dodajVitalnoKrvniTlakDiastolicni" type="text" class="form-control input-mini" placeholder="92"><span class="input-group-addon">mm Hg</span></div>
-						<div class="input-group"><span class="input-group-addon">Nasičenost krvi s kisikom</span><input id="dodajVitalnoNasicenostKrviSKisikom" type="text" class="form-control input-mini" placeholder="98"><span class="input-group-addon">%</span></div>
-						<button type="button" class="btn btn-primary btn-l" style="margin-top: 15px" onclick="dodajMeritveVitalnihZnakov()">Dodaj meritve vitalnih znakov</button><span id="dodajMeritveVitalnihZnakovSporocilo"></span>
-				  	</div>
-				</div>
-			</div>
-			-->
-        <!-- DODATEK END - Vnost meritve vitalnih znakov -->
+			
       </div>
     </div>
     

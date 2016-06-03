@@ -22,7 +22,7 @@
           <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
         </button>
         <!-- ZAČETEK: Ime vaše aplikacije -->
-        <a class="navbar-brand" href="index.html">LifeExpectancy Analyser</a>
+        <a class="navbar-brand" href="index.html">Life Expectancy Analyser</a>
         <!-- KONEC: Ime vaše aplikacije -->
       </div>
       <div class="collapse navbar-collapse" id="menujska-vrstica">
@@ -49,7 +49,7 @@
             Na podlagi povprečne življenjske dobe v državi, kjer pacient živi in njegovega življenjskega sloga nato izračuna pričakovano življenjsko dobo in poda predloge za izboljšanje življenjskega sloga.<br><br>
             <strong><u>Ciljna publika:</u></strong> Ciljna publika so uporabniki/pacienti, ki jih zanima, kako zdrav je njihov življenjski slog ali jih zanima, kakšna je njihova pričakovana življenjska doba glede na njihov življenjski slog.<br><br>
             <strong><u>Scenarij uporabe:</u></strong> Uporabnik vnese svoj osebni EHR ID in nekatere podrobnosti svojega življenjskega sloga, nato izbere 'Analiziraj življenjski slog'. 
-            <br>Aplikacija izpiše oceno njegovega življenjskega sloga in predloge za izboljšanje in pričakovano življenjsko dobo.
+            <br>Aplikacija izpiše oceno njegovega življenjskega sloga in predloge za izboljšanje ter pričakovano življenjsko dobo, ki se je izračunala glede na vnešene podatke.
             Dodatno lahko uporabnik pregleda še nekatere svoje meritve oz. nihanje meritev skozi čas, kjer so posebej označene tiste, ki za uporabnika predstavljajo tveganje splošno zdravje.
             </p>
             <!-- KONEC: Opis ideje, ki jo aplikacija podpira -->
@@ -62,9 +62,10 @@
           <div class="panel-body">
             <!-- ZAČETEK: Uporabljeni zunanji viri podatkov -->
             <p style="text-align: left"><u><strong>Zunanji vir podatkov:</strong></u> Aplikacija kot zunanji vir podatkov uporablja tabelo iz Wikipedije – <a href="https://en.wikipedia.org/wiki/List_of_countries_by_life_expectancy" target="_blank">List of countries by life expectancy (WHO, 2015)</a>.
-            <br>Za določanje konstant pri izračunu življenjske dobe so bili uporablejeni še podatki iz naslednjih virov: <a href="http://www.cdc.gov/tobacco/data_statistics/fact_sheets/health_effects/tobacco_related_mortality/" target="_blank">Kajenje</a>, <a href="http://www.news-medical.net/news/2005/06/29/11410.aspx" target="_blank">krvni tlak</a>, 
-                <a href="https://www.nih.gov/news-events/news-releases/nih-study-finds-extreme-obesity-may-shorten-life-expectancy-14-years" target="_blank">telesna teža</a>, <a href="http://www.searidgealcoholrehab.com/alcoholism-health-effects.php" target="_blank">alkohol</a>.<br><br>
-              <u><strong>Implementacija:</strong></u> Podatki se ob vsaki osvežitvi strani <i>index.html</i> avtomatsko pridobijo preko API klica in se začasno lokalno shranijo. <br>
+            <br><i>(Za določanje konstant pri izračunu življenjske dobe so bili uporablejeni še podatki iz naslednjih virov: <a href="http://www.cdc.gov/tobacco/data_statistics/fact_sheets/health_effects/tobacco_related_mortality/" target="_blank">Kajenje</a>, <a href="http://www.news-medical.net/news/2005/06/29/11410.aspx" target="_blank">krvni tlak</a>, 
+                <a href="https://www.nih.gov/news-events/news-releases/nih-study-finds-extreme-obesity-may-shorten-life-expectancy-14-years" target="_blank">telesna teža</a>, <a href="http://www.searidgealcoholrehab.com/alcoholism-health-effects.php" target="_blank">alkohol</a>.)</i><br><br>
+              <u><strong>Implementacija:</strong></u> Podatki se ob osvežitvi strani <i>index.html</i> avtomatsko pridobijo preko API klica in se začasno lokalno shranijo. <br>
+              Do HTML vsebine strani na Wikipediji program (zaradi zaščite na Wikipediji) dostopa preko CORS proxy storitve <a href="http://crossorigin.me/" target="_blank">crossorigin.me</a><br>
               Ob izbiri države iz menija aplikacija poišče izbrano državo v začasni lokalni kopiji tabele in pridobi pričakovano življenjsko dobo za moške oz. ženske v tej državi, ki jo nato uporabi kot podatek pri izračunu pričakovane življenjske dobe, saj je le-ta odvisna tudi od države prebivanja.
             </p>
             <!-- KONEC: Uporabljeni zunanji viri podatkov -->
