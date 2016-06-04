@@ -65,8 +65,8 @@
             <br><i>(Za določanje konstant pri izračunu življenjske dobe so bili uporablejeni še podatki iz naslednjih virov: <a href="http://www.cdc.gov/tobacco/data_statistics/fact_sheets/health_effects/tobacco_related_mortality/" target="_blank">Kajenje</a>, <a href="http://www.news-medical.net/news/2005/06/29/11410.aspx" target="_blank">krvni tlak</a>, 
                 <a href="https://www.nih.gov/news-events/news-releases/nih-study-finds-extreme-obesity-may-shorten-life-expectancy-14-years" target="_blank">telesna teža</a>, <a href="http://www.searidgealcoholrehab.com/alcoholism-health-effects.php" target="_blank">alkohol</a>.)</i><br><br>
               <u><strong>Implementacija:</strong></u> Podatki se ob osvežitvi strani <i>index.html</i> avtomatsko pridobijo preko API klica in se začasno lokalno shranijo. <br>
-              Do HTML vsebine strani na Wikipediji program (zaradi zaščite na Wikipediji) dostopa preko CORS proxy storitve <a href="http://crossorigin.me/" target="_blank">crossorigin.me</a><br>
-              Ob izbiri države iz menija aplikacija poišče izbrano državo v začasni lokalni kopiji tabele in pridobi pričakovano življenjsko dobo za moške oz. ženske v tej državi, ki jo nato uporabi kot podatek pri izračunu pričakovane življenjske dobe, saj je le-ta odvisna tudi od države prebivanja.
+              Do HTML vsebine strani na Wikipediji program (zaradi zaščite na Wikipediji) dostopa preko CORS proxy storitve <a href="http://crossorigin.me/" target="_blank">crossorigin.me</a>. Če pride do napake pri pridobivanju podatkov iz <i><a href="http://crossorigin.me/" target="_blank">crossorigin.me</a></i> (npr. trenutna nedostopnost strežnika) se podatki pridobijo iz lokalne kopije tabele.<br>
+              Ob izbiri države iz menija aplikacija poišče izbrano državo v tabeli in pridobi pričakovano življenjsko dobo za moške oz. ženske v tej državi, ki jo nato uporabi kot podatek pri izračunu pričakovane življenjske dobe, saj je le-ta odvisna tudi od države prebivanja.
             </p>
             <!-- KONEC: Uporabljeni zunanji viri podatkov -->
           </div>

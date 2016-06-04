@@ -82,7 +82,7 @@ function generirajPodatke(stPacienta) {
     // Klic funkcije za kreiranje kartoteke iz pridobitev EHRidja
     kreirajEHRauto(pacient, stPacienta, function(ehrIdcall){
         if(ehrIdcall != null){
-            console.log("stPacienta: " +stPacienta);
+            //console.log("stPacienta: " +stPacienta);
             if(stPacienta == 1){
     	        pacientiTab[1].ehrId = ehrIdcall;
     	    } else if (stPacienta == 2) {
@@ -96,7 +96,7 @@ function generirajPodatke(stPacienta) {
         	    
         	    // Generiraj 3 meritve vitalnih znakov za vsakega pacienta
         	    for(var i = 1; i <= 3; i++){
-                    console.log("pacient: " + i + " : " + pacientiTab[i].ehrId);
+                    //console.log("pacient: " + i + " : " + pacientiTab[i].ehrId);
                     dodajMeritveVitalnihZnakovAuto(i);
                 }
                 
@@ -170,7 +170,7 @@ function kreirajEHRauto(pacient, stPacienta, callback){
 
 	if (!pacient.firstName || !pacient.lastName || !pacient.birthDate || !pacient.gender) {
         console.log("Napaka pri kreiranju pacienta");
-		$("#kreirajSporociloError").html("<span class='obvestilo label " + "label-warning fade-in'>Prosim vnesite zahtevane podatke!</span>");
+		$("#kreirajSporociloError").html("<span class='obvestilo label " + "label-warning fade-in'>Vnesite zahtevane podatke!</span>");
 	} else {
 		$.ajaxSetup({
 		    headers: {"Ehr-Session": sessionId}
@@ -243,7 +243,7 @@ function dodajMeritveVitalnihZnakovAuto(stPacienta){
     
     switch(stPacienta){
         case 1:
-            console.log("Pride sem?");
+            //console.log("Pride sem?");
             var meritve1_1 = meritve;
             meritve1_1.ehrId = pacientiTab[stPacienta].ehrId;
 	        meritve1_1.datumInUra= "2010-03-12T12:55";
@@ -282,7 +282,7 @@ function dodajMeritveVitalnihZnakovAuto(stPacienta){
             
         case 2:
             var meritve2_1 = meritve;
-            console.log("Pride sem - switch");
+            //console.log("Pride sem - switch");
             meritve2_1.ehrId = pacientiTab[stPacienta].ehrId;
 	        meritve2_1.datumInUra= "2011-04-22T12:55";
 	        meritve2_1.telesnaVisina= "155";
@@ -452,7 +452,7 @@ function analizirajZivSlog() {
     var expDobaZ = null;
     var d = new Date();
     var leto = d.getFullYear();
-    console.log(leto);
+    //console.log(leto);
     var toGo;
     var i;
     console.log("Select country return: " + drzava);
@@ -548,10 +548,10 @@ function analizirajZivSlog() {
                                 
                                 //expDobaM = res4.maleLifeExpectancy;
                                 //expDobaZ = res4.femaleLifeExpectancy;
-                                //console.log("DobaM:" + expDobaM);    
+                                ////console.log("DobaM:" + expDobaM);    
                                 // Parse iz wikipedije END
                                 if(spol == "MALE" || spol == "FEMALE"){
-                                   console.log("Spol izbran");
+                                   //console.log("Spol izbran");
                                 } else {
                                     if($('input[name=spol]:checked').val() == 0){
                                         spol = "MALE";
@@ -629,10 +629,10 @@ function analizirajZivSlog() {
                                 var expectedStarost = 0;
                                 if(spol == "MALE"){
                                     expectedStarost = expDobaM;
-                                    console.log("Pricakovana ZD(Moski): " + expDobaM)
+                                    //console.log("Pricakovana ZD(Moski): " + expDobaM)
                                 } else {
                                     expectedStarost = expDobaZ;
-                                    console.log("Pricakovana ZD(Zenske): " + expDobaZ);
+                                    //console.log("Pricakovana ZD(Zenske): " + expDobaZ);
                                 }
                                 
                                 
@@ -641,6 +641,7 @@ function analizirajZivSlog() {
                                     toGo = 1;
                                 }
                                 
+                                /*
                                 if(odbitekSplosen < (-10)){
                                     console.log("Critical lifestyle - list predlogov");
                                 } else if (odbitekSplosen < -5){
@@ -650,13 +651,7 @@ function analizirajZivSlog() {
                                 }
                                 console.log("Spremenjena ZD glede na lifestyle: " + odbitekSplosen + " Years to go: " + toGo);
                                 console.log("Predlogi za izboljšanje življenjskega stila");
-                                
-                                if(jeKadilec == 1) console.log("Prenehajte kaditi");
-                                if(odbitekITM < 0) console.log("Vaša telesna teža je previsoka");
-                                if(odbitekAlkohol < 0) console.log("Preveč pijete");
-                                if(odbitekTlak < 0) console.log("Previsok tlak - posvetujte se z zdravnikom");
-                                if(pribitekSport < 3) console.log("Premalo se ukvarjate s športom");
-                                
+                                */
                                 
                                 
                                 // Kreira objekt za izpis na strani
@@ -702,8 +697,9 @@ function analizirajZivSlog() {
             
             // Izpis ce je napaka na EHRidju
             console.log("Error - ID ne obstaja");
-            $("#kreirajSporociloVnos2").html("<span class='obvestilo " +
-            "label label-danger fade-in'>Zahtevani EHR ID ne obstaja</span>");
+            $("#kreirajSporociloError").html("<span class='obvestilo label " + "label-warning fade-in'>Vnešeni EHR ID ne obstaja</span>");
+            //$("#kreirajSporociloVnos2").html("<span class='obvestilo " +
+            //"label label-danger fade-in'>Zahtevani EHR ID ne obstaja</span>");
         }
     });     
 }
@@ -715,37 +711,37 @@ function vizualizacija(vizData) {
   	var gauge1 = loadLiquidFillGauge("fillgauge1", vizData.prvi);
 	
 	var config1 = liquidFillGaugeDefaultSettings();
-    config1.circleColor = "#FF7777";
+    config1.circleColor = "#FF4040";
     config1.textColor = "#FF4444";
     config1.waveTextColor = "#FFAAAA";
-    config1.waveColor = "#FFDDDD";
-    config1.circleThickness = 0.2;
+    config1.waveColor = "#FF4040";
+    config1.circleThickness = 0.1;
     config1.textVertPosition = 0.2;
     config1.waveAnimateTime = 1000;
     config1.displayPercent = false;
     // Rdeči krog
-    console.log("Viz data - odb lifestyle: "+ vizData.odbitekLifestyle);
+    //console.log("Viz data - odb lifestyle: "+ vizData.odbitekLifestyle);
     var gauge2= loadLiquidFillGauge("fillgauge2", vizData.drugi(), config1);
     
     var config2 = liquidFillGaugeDefaultSettings();
-    config2.circleColor = "#D4AB6A";
-    config2.textColor = "#553300";
-    config2.waveTextColor = "#805615";
-    config2.waveColor = "#AA7D39";
-    config2.circleThickness = 0.1;
-    config2.circleFillGap = 0.2;
-    config2.textVertPosition = 0.8;
-    config2.waveAnimateTime = 2000;
-    config2.waveHeight = 0.3;
-    config2.waveCount = 1;
+    config2.circleColor = "#44CF2B";
+    config2.textColor = "#6DFF52";
+    config2.waveTextColor = "#169706"; 
+    config2.waveColor = "#44CF2B";
+    config2.circleThickness = 0.05;
+    config2.circleFillGap = 0.05;
+    config2.textVertPosition = .5;
+    config2.waveAnimateTime = 1000;
+    config2.waveHeight = 0.05;
+    config2.waveCount = 4;
     
     // Zeleni krog
     var gauge3 = loadLiquidFillGauge("fillgauge3", vizData.tretji, config2);
 	var config3 = liquidFillGaugeDefaultSettings();
-    config3.circleColor = "#33CC59";
+    config3.circleColor = "#555555";
     config3.textColor = "#FF4444";
     config3.waveTextColor = "#FFAAAA";
-    config3.waveColor = "#33CC33";
+    config3.waveColor = "#555555";
     config3.circleThickness = 0.2;
     config3.textVertPosition = 0.2;
     config3.waveAnimateTime = 1000;
@@ -1078,14 +1074,14 @@ function izpisiTabeloMeritev(){
     
     
     var value = $("#izpisiMeritve").val().trim();
-    console.log("Value iz tabele meritev: " + value);
+    //console.log("Value iz tabele meritev: " + value);
     var tabelaTez;
     var tabelaVisin;
     
     
     if(value == 1 && globalEhrId != null){
         preberiTezo(globalEhrId, function(res){
-            console.log("Res.length= " + res.length);
+            //console.log("Res.length= " + res.length);
             
             if (res.length > 0) {
 			    var results = "<table class='table table-striped " + "table-hover'><tr><th>Datum in ura</th>" +
@@ -1103,7 +1099,7 @@ function izpisiTabeloMeritev(){
         });
     } else if (value == 2 && globalEhrId != null) {
         preberiVisino(globalEhrId, function(res){
-            console.log("Visina.length: " + res.length);
+            //console.log("Visina.length: " + res.length);
         
         if (res.length > 0) {
 			    var results = "<table class='table table-striped " + "table-hover'><tr><th>Datum in ura</th>" +
